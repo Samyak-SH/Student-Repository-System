@@ -1,3 +1,5 @@
+const SECRETKEY = process.env.SECRETKEY
+
 const verifyToken = (req,res,next)=>{
     //verify jwt token for 3 cases
     //1) valid token

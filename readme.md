@@ -44,9 +44,11 @@ Before you begin, ensure you have the following installed:
    ```
    PORT= 
    MONGODBURL= 
+   SECRET KEY = 
    ```
    * `PORT`: The port number you want your server to run on (e.g., 5000).
    * `MONGODBURL`: Your MongoDB connection string.
+   * `SECRETKEY`: Your JWT verification key.
 
 ### 3. Start the Application
 
