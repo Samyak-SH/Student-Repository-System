@@ -4,7 +4,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-
+//controller imports
+const {createStudent} = require("./controller.js/studentController")
 
 //router imports
 const {studentRouter} = require("./router/studentRouter");
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
+//routings
 app.use("/student", studentRouter);
 
 //todo
@@ -32,6 +34,7 @@ app.use("/student", studentRouter);
 
 // app.post("/uploadCertificate") //only student side
 // app.post("/editCertificate") //only student side
+app.post("/createStudent", createStudent) //does not require jwt verification
 
 const startServer = async ()=>{
     try{

@@ -1,13 +1,13 @@
-const express = requires("express");
+const express = require("express");
 const studentRouter = express.Router();
 
 //contr0ller imports
-const {findStudent} = require("./controller.js/studentController")
+const {getStudent} = require("../controller.js/studentController")
 
 const {verifyToken} = require("../middleware/verifyToken");
 
 studentRouter.use(verifyToken);
 
-studentRouter.get("/getStudent", findStudent)
+studentRouter.get("/getStudent", getStudent);
 
 module.exports = {studentRouter};
