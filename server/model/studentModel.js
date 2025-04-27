@@ -13,15 +13,21 @@ const studentModel = mongoose.model("SCR", studentSchema, "students");
 
 const getStudent = async (usn, cb)=>{
     try{
-        const {USN, TID, firstName, lastName, email} = await studentModel.findOne( { USN : usn } );
-        const student = {
-            USN : USN,
-            TID : TID,
-            firstName : firstName,
-            lastName : lastName,
-            email : email,
+        const result = await studentModel.findOne( { USN : usn } );
+        if(result){
+            const {USN, TID, firstName, lastName, email} = result;
+            const student = {
+                USN : USN,
+                TID : TID,
+                firstName : firstName,
+                lastName : lastName,
+                email : email,
+            }
+            cb(student, null);
         }
-        cb(student, null);
+
+        cb(null, null);//no result no error
+        
     }catch(err){
         cb(null, err);
     }

@@ -1,7 +1,7 @@
 const studentModel = require("../model/studentModel");
 
 const getStudent = (req,res)=>{
-    //actual code const {usn} = req.user because we storing decoded details in req.user after jwt verfication/
+    //actual code const {USN} = req.user because we storing decoded details in req.user after jwt verfication/
     const {USN} = req.body; // fetching from request body for testing 
     console.log("USN : ",USN);
     studentModel.getStudent(USN, (result, err)=>{

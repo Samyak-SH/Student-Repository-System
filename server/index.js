@@ -6,9 +6,11 @@ const cors = require("cors");
 
 //controller imports
 const {createStudent} = require("./controller.js/studentController")
+const {createTeacher} = require("./controller.js/teacherController")
 
 //router imports
 const {studentRouter} = require("./router/studentRouter");
+const {teacherRouter} = require("./router/teacherRouter")
 
 //env imports
 const PORT = process.env.PORT;
@@ -24,17 +26,18 @@ app.use(express.urlencoded({extended : true}));
 
 //routings
 app.use("/student", studentRouter);
+app.use("/teacher", teacherRouter);
 
 //todo
 // app.get("/singin")
 // app.get("/signup")
-// app.get("/teacher") //to find teacher
 // app.get("/studentCertificate") to get all student certificates
 // app.get("/teacherCertificate")
 
 // app.post("/uploadCertificate") //only student side
 // app.post("/editCertificate") //only student side
 app.post("/createStudent", createStudent) //does not require jwt verification
+app.post("/createTeacher", createTeacher)
 
 const startServer = async ()=>{
     try{
