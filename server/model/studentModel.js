@@ -25,8 +25,10 @@ const getStudent = async (usn, cb)=>{
             }
             cb(student, null);
         }
+        else{
+            cb(null, null);//no result no error            
+        }
 
-        cb(null, null);//no result no error
         
     }catch(err){
         cb(null, err);

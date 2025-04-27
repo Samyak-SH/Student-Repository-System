@@ -23,8 +23,10 @@ const getTeacher = async (tid, cb)=>{
             }
             cb(teacher, null);
         }
+        else{
+            cb(null, null)
+        }
 
-        cb(null, null)
         
     }catch(err){
         cb(null, err);
