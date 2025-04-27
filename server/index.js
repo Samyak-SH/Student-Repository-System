@@ -31,8 +31,6 @@ app.use("/teacher", teacherRouter);
 //todo
 // app.get("/singin")
 // app.get("/signup")
-// app.get("/studentCertificate") to get all student certificates
-// app.get("/teacherCertificate")
 
 // app.post("/uploadCertificate") //only student side
 // app.post("/editCertificate") //only student side

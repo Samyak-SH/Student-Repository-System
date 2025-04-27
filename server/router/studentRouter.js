@@ -10,4 +10,6 @@ studentRouter.use(verifyToken);
 
 studentRouter.get("/getStudent", getStudent);
 
+// teacherRouter.get("/studentCertificate") to get all student certificates
+
 module.exports = {studentRouter};
