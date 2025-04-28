@@ -45,4 +45,26 @@ const createStudent = async (student, cb)=>{
     }
 }
 
-module.exports = {getStudent, createStudent}
+const updateStudent = async (student, cb)=>{
+    try{
+        const result = await studentModel.updateOne({USN : student.USN},{$set:{
+            firstName : student.firstName,
+            lastName : student.lastName,
+            email : student.email,
+            password : student.password,
+
+        }})
+
+        if(result.modifiedCount == 0){
+            cb({message : "no student found", error:{message: "modified count 0"}})
+        }
+        else{
+            cb({message : "udpated successfully"});            
+        }
+    }
+    catch(err){
+        cb({message : "failed to update student", error : err.message});
+    }
+}
+
+module.exports = {getStudent, createStudent, updateStudent}

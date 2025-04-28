@@ -26,12 +26,12 @@ const createTeacher = (req,res)=>{
         password : req.body.password
     }
     //todo create JWT and return to user
-    teacherModel.createTeacher(teacher, (message, err)=>{
+    teacherModel.createTeacher(teacher, (result)=>{
         if(err){
-            console.error(message, err.message);
-            return res.status(500).send({message : message, error:err.message});
+            console.error(result.message, result.error.message);
+            return res.status(500).send({message : result.message, error:result.error.message});
         }
-        res.status(200).send({message : message});
+        res.status(200).send({message : result.message});
     })
 }
 

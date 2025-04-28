@@ -2,10 +2,11 @@ const express = require("express");
 const teacherRouter = express.Router();
 
 //controller imports
-const {getTeacher} = require("../controller.js/teacherController")
+const {getTeacher} = require("../controller/teacherController")
 
 const {verifyToken} = require("../middleware/verifyToken");
 
+//middleware
 teacherRouter.use(verifyToken);
 
 teacherRouter.get("/getTeacher", getTeacher);

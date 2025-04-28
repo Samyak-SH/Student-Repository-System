@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 //controller imports
-const {createStudent} = require("./controller.js/studentController")
-const {createTeacher} = require("./controller.js/teacherController")
+const {createStudent} = require("./controller/studentController")
+const {createTeacher} = require("./controller/teacherController")
 
 //router imports
 const {studentRouter} = require("./router/studentRouter");
@@ -27,6 +27,8 @@ app.use(express.urlencoded({extended : true}));
 //routings
 app.use("/student", studentRouter);
 app.use("/teacher", teacherRouter);
+
+app.get("/test", (req,res)=>{res.send("server running")});
 
 //todo
 // app.get("/singin")
