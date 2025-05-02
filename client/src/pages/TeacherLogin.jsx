@@ -21,44 +21,26 @@ const TeacherLogin = () => {
     e.preventDefault()
     setError('')
 
-    // Basic validation
     if (!formData.email || !formData.password) {
       setError('All fields are required')
       return
     }
 
     setLoading(true)
+
     try {
-      // Make an API request to backend here
-      const response = await fetch('YOUR_API_URL/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
+      //  for backend API call
+      console.log('Form submitted:', formData)
+      
+      // for now it simulate to home page 
+      setTimeout(() => {
+        navigate('/teacher/home')
+      }, 1000)
 
-      const data = await response.json()
-
-      if (response.ok) {
-        // On success, redirect to home page
-        navigate(`/teacher/home`)
-      } else {
-        setError(data.message || 'Failed to log in')
-      }
     } catch (err) {
-      setError('Failed to log in')
+      setError('Login failed. Please try again.')
     } finally {
       setLoading(false)
-    }
-  }
-
-  const formVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.6, ease: "easeOut" }
     }
   }
 
@@ -70,27 +52,28 @@ const TeacherLogin = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-        
+         
         </motion.div>
       </div>
-      
+
+
+
+{/* //Login credentials */}
       <div className="flex-grow flex items-center justify-center px-6 py-12">
         <motion.div
-          variants={formVariants}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
           className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md"
         >
           <div className="text-center mb-8">
             <div className="inline-block p-3 rounded-full bg-primary-100 text-primary-600 mb-4">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-neutral-800">Welcome Back</h2>
-            <p className="text-neutral-600 mt-2">
-              Log in to your teacher account
-            </p>
+            <p className="text-neutral-600 mt-2">Log in to your teacher account</p>
           </div>
 
           {error && (
@@ -98,7 +81,7 @@ const TeacherLogin = () => {
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">
@@ -119,7 +102,7 @@ const TeacherLogin = () => {
                 />
               </div>
             </div>
-            
+
             <div className="mb-6">
               <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
                 Password
@@ -139,7 +122,7 @@ const TeacherLogin = () => {
                 />
               </div>
             </div>
-            
+
             <button
               type="submit"
               disabled={loading}
@@ -148,10 +131,13 @@ const TeacherLogin = () => {
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
-          
+
+
+
+   {/* if account signup here button */}
           <p className="mt-6 text-center text-neutral-600">
             Don't have an account?{' '}
-            <Link 
+            <Link
               to="/teacher/signup"
               className="text-primary-600 hover:text-primary-700 font-medium"
             >

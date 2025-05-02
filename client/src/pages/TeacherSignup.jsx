@@ -39,10 +39,11 @@ const TeacherSignup = () => {
     }
 
     setLoading(true);
-    // Simulate an API call (later you can connect to backend)
+    // Simulate an API call through backend
     setTimeout(() => {
       setLoading(false);
-      // For now, navigate to teacher's home page after "successful signup"
+
+      // For now simply  navigate to teacher's home page after successful signup
       navigate('/teacher/home');
     }, 2000);
   };
@@ -83,6 +84,8 @@ const TeacherSignup = () => {
             <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-md text-sm">{error}</div>
           )}
 
+
+{/* started signup form with credential */}
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
@@ -190,6 +193,9 @@ const TeacherSignup = () => {
               {loading ? 'Creating Account...' : 'Sign Up'}
             </button>
           </form>
+
+
+          {/* if login it render to login form */}
 
           <p className="mt-6 text-center text-neutral-600">
             Already have an account?{' '}

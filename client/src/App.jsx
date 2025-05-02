@@ -3,12 +3,14 @@ import { BrowserRouter as Router } from 'react-router-dom'; // Make sure this li
 // import LandingPage from './pages/LandingPage'
 // import TeacherSignup from './pages/TeacherSignup'
 // import TeacherLogin from './pages/TeacherLogin'
+import TeacherHome from './pages/TeacherHome'
 const App = () => {
   return (
     <Router>
       {/* <LandingPage /> */}
       {/* <TeacherSignup/>
 <TeacherLogin/> */}
+<TeacherHome/>
     </Router>
   );
 }

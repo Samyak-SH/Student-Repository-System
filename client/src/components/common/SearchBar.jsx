@@ -4,10 +4,29 @@ import { motion } from 'framer-motion'
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSearch(query)
+    setLoading(true)
+    setError(null)
+
+    try {
+    
+      if (onSearch) {
+        await onSearch(query)
+      } else {
+
+        // for backend API integration
+        console.log(`Search query: ${query}`)
+      }
+    } catch (err) {
+      console.error(err)
+      setError('Search failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -25,13 +44,16 @@ const SearchBar = ({ onSearch }) => {
           onChange={(e) => setQuery(e.target.value)}
           className="input-field pl-12 py-3 w-full"
         />
-        <button 
+        <button
           type="submit"
           className="absolute left-0 top-0 h-full flex items-center justify-center px-4"
+          disabled={loading}
         >
           <FiSearch className="w-5 h-5 text-neutral-500" />
         </button>
       </form>
+      {loading && <p className="text-sm text-neutral-500 mt-2">Searching...</p>}
+      {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
     </motion.div>
   )
 }
