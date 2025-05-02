@@ -83,6 +83,9 @@ const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
                 boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
               }}
             >
+
+
+              {/* For Now using Hardcoded mock data for folders later is replaced by APi call from Backend  */}
               <div className="flex items-start">
                 <div
                   className={`p-3 rounded-md mr-4 ${
