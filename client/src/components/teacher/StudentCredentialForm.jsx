@@ -153,6 +153,7 @@ const StudentCredentialForm = ({ onClose, onSuccess }) => {
             </div>
           </div>
 
+    {/* fetching department from Mockdata for now */}
           <div className="mb-4">
             <label htmlFor="department" className="block text-sm font-medium text-neutral-700 mb-1">
               Department
