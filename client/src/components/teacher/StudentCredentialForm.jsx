@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FiUser, FiMail, FiLock, FiBookmark, FiX } from 'react-icons/fi'
-import { departments } from '../../utils/mockData'       // for now fetching department from MockData file later on it is replace by user auth
+import { departments } from '../../utils/mockData'       // for now fetching department from MockData file later on it is replace by real API call
 import { motion } from 'framer-motion'
 
 const StudentCredentialForm = ({ onClose, onSuccess }) => {
