@@ -28,7 +28,7 @@ const FilterSection = ({ onFilterChange }) => {
 
 
           // if api fail , use mock data
-          setCategories(['Website', 'App', 'AI', 'ML','Games', 'Design'])
+          setCategories(['Website', 'App', 'AI', 'ML','Games', 'Design','Game Development'])
           setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
         }
       } catch (error) {
