@@ -113,8 +113,8 @@ const FolderCard = ({ folder, onEdit, onDelete }) => (
         
           
           <p className="text-sm text-green-700">{folder.title}</p>
-          <p className="text-sm text-Blue-600"> {folder.department}</p>
-          <p className="text-sm text-neutral-500">Created on{folder.date}</p>
+          <p className="text-sm text-blue-600"> {folder.department}</p>
+          <p className="text-sm text-neutral-500">Created on {folder.date}</p>
         </Link>
       </div>
 

@@ -28,7 +28,7 @@ const FilterSection = ({ onFilterChange }) => {
 
 
           // if api fail , use mock data
-          setCategories(['Website', 'App', 'AI', 'ML','Games', 'Design','Game Development'])
+          setCategories(['Website', 'App', 'AI', 'ML','Games', 'Design'])
           setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
         }
       } catch (error) {
@@ -36,8 +36,8 @@ const FilterSection = ({ onFilterChange }) => {
         
 
         //  If fetching of api  fails use mockdata
-        setCategories(['Hackathons', 'Sports', 'Courses', 'Gaming', 'Design'])
-        setDepartments(['CSE', 'ECE', 'Data Science', 'Mechanical Engineering', 'Automobile Engineering'])
+        setCategories(['Website', 'App', 'AI', 'ML', 'Design'])
+        setDepartments(['Frontend', 'Backend', 'Fullstack', 'AI Team', 'UI/UX'])
       }
     }
 
@@ -83,7 +83,6 @@ const FilterSection = ({ onFilterChange }) => {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0 }
   }
-
 
 
   return (
