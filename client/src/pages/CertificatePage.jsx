@@ -17,7 +17,9 @@ const CertificatePage = () => {
     // Fetching certificates for folder
     const fetchCertificates = async () => {
       setIsLoading(true)
+
       try {
+
         // In a real api Call, the mockdata is replace by real api cal from backend 
 
 
@@ -37,9 +39,10 @@ const CertificatePage = () => {
     fetchCertificates()
   }, [folderId])
   
+
   const handleDownload = (certificate) => {
     
-    // i real call , this rtrigger file download 
+    // in real call , this trigger file download 
     console.log('Downloading certificate:', certificate.name)
     alert(`Downloading ${certificate.name}`)
   }

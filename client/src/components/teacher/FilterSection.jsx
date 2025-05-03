@@ -7,6 +7,8 @@ const FilterSection = ({ onFilterChange }) => {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedDepartment, setSelectedDepartment] = useState('')
 
+
+
   // Fetch categories and departments data  using api from backend
   useEffect(() => {
     const fetchFiltersData = async () => {
@@ -18,9 +20,11 @@ const FilterSection = ({ onFilterChange }) => {
           const categoriesData = await categoriesResponse.json()
           const departmentsData = await departmentsResponse.json()
           
+
           setCategories(categoriesData)               // Setting  categories from  API response
           setDepartments(departmentsData)       // Set departments from API response
         } else {
+
 
 
           // if api fail , use mock data
@@ -30,6 +34,7 @@ const FilterSection = ({ onFilterChange }) => {
       } catch (error) {
         console.error('Error fetching filter data:', error)
         
+
         //  If fetching of api  fails use mockdata
         setCategories(['Website', 'App', 'AI', 'ML', 'Design'])
         setDepartments(['Frontend', 'Backend', 'Fullstack', 'AI Team', 'UI/UX'])
@@ -38,6 +43,7 @@ const FilterSection = ({ onFilterChange }) => {
 
     fetchFiltersData()
   }, [])
+
 
 
   // Handle  changes based on category
@@ -52,7 +58,7 @@ const FilterSection = ({ onFilterChange }) => {
 
 
 
-  // Similarly Handle handle chnages based on department
+  // handle chnages based on department
   const handleDepartmentChange = (department) => {
     const newDepartment = department === selectedDepartment ? '' : department
     setSelectedDepartment(newDepartment)
@@ -79,7 +85,7 @@ const FilterSection = ({ onFilterChange }) => {
   }
 
 
-//   ui of filter
+
   return (
     <div className="bg-white rounded-lg shadow-card p-5">
       <motion.div

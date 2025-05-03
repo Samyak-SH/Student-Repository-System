@@ -5,16 +5,16 @@ import { motion } from 'framer-motion'
 
 
 //  category filter fetched from backend 
-
 const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
   const [hoveredItem, setHoveredItem] = useState(null)
+
 
 // Filtering handle on Backend if nedded
   const filteredFolders = selectedCategory
     ? folders.filter(folder => folder.category === selectedCategory)
     : folders
 
-  //Loading while filters are fetched from backend 
+  //Loading while filters are fetched from backend later
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

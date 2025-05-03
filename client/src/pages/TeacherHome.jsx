@@ -17,11 +17,12 @@ const TeacherHome = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [showCredentialForm, setShowCredentialForm] = useState(false)
 
-  // ⬇️ You only need to replace this function with real API call later
+
+  // Replace this function with real API call from backend
   const fetchFolders = async () => {
     setIsLoading(true)
     try {
-      const data = getAllFolders() // 🔁 Replace this with your API call later
+      const data = getAllFolders()    //replace this with api call
       setFolders(data)
       setFilteredFolders(data)
     } catch (error) {
@@ -61,8 +62,7 @@ const TeacherHome = () => {
   const handleFilterChange = (newFilters) => setFilters(newFilters)
   const handleCreateStudentSuccess = () => {
     setShowCredentialForm(false)
-    // Later, you can refresh data here if needed
-    // fetchFolders()
+   
   }
 
   return (
@@ -81,10 +81,13 @@ const TeacherHome = () => {
             <p className="text-neutral-600">Manage student certificates and credentials</p>
           </motion.div>
 
+
+           {/* SearchBar */}
           <div className="mb-8">
             <SearchBar onSearch={handleSearch} />
           </div>
 
+         {/* Filtersection */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-1">
               <div className="space-y-6">
@@ -96,6 +99,9 @@ const TeacherHome = () => {
                   transition={{ duration: 0.5, delay: 0.4 }}
                   className="bg-white rounded-lg shadow-card p-5"
                 >
+
+
+                  {/* Credential for */}
                   <h3 className="text-lg font-semibold mb-4">Teacher Actions</h3>
                   <button
                     onClick={() => setShowCredentialForm(true)}
