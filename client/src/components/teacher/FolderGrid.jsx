@@ -1,20 +1,48 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FiFolder, FiFileText, FiUser, FiBriefcase } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
 
-//  category filter fetched from backend 
-const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
-  const [hoveredItem, setHoveredItem] = useState(null)
+// Component to fetch data from backend API
+const useFoldersData = (selectedCategory) => {
+  const [folders, setFolders] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
+  useEffect(() => {
+    const fetchFolders = async () => {
+      try {
+        setIsLoading(true)
+        const response = await fetch('/api/folders') // use real API later to fetch data of all folders 
+        if (!response.ok) throw new Error('Failed to fetch folders')
+        const data = await response.json()
+        setFolders(data)
+      } catch (error) {
+        console.error(error)
+       
+        //for now returning an empty array
+        setFolders([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-// Filtering handle on Backend if nedded
+    fetchFolders()
+  }, [])
+
+  // Filtering folders based on the selected category
   const filteredFolders = selectedCategory
-    ? folders.filter(folder => folder.category === selectedCategory)
+    ? folders.filter((folder) => folder.category === selectedCategory)
     : folders
 
-  //Loading while filters are fetched from backend later
+  return { folders: filteredFolders, isLoading }
+}
+
+const FolderGrid = ({ selectedCategory }) => {
+  const { folders, isLoading } = useFoldersData(selectedCategory)
+
+
+  // Handle loading state (spinner or skeleton)
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -34,8 +62,8 @@ const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
     )
   }
 
- //When no folder selected 
-  if (filteredFolders.length === 0) {
+  // Handle empty state when there is no folder
+  if (folders.length === 0) {
     return (
       <div className="text-center py-12">
         <FiFolder className="w-16 h-16 mx-auto text-neutral-300 mb-4" />
@@ -45,6 +73,7 @@ const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
     )
   }
 
+  // animation of folder cards
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -60,6 +89,18 @@ const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   }
 
+  //  category styles 
+  const categoryStyles = {
+    'Hackathon': 'bg-purple-100 text-purple-600',
+    'Game Development': 'bg-red-100 text-red-600',
+    'Web Development': 'bg-blue-100 text-blue-600',
+    'AI/ML': 'bg-green-100 text-green-600',
+    'Cybersecurity': 'bg-yellow-100 text-yellow-600',
+    'Data Science': 'bg-indigo-100 text-indigo-600',
+    'Mobile Development': 'bg-pink-100 text-pink-600',
+    'default': 'bg-teal-100 text-teal-600',
+  }
+
   return (
     <motion.div
       className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
@@ -67,75 +108,56 @@ const FolderGrid = ({ folders, isLoading, selectedCategory }) => {
       initial="hidden"
       animate="visible"
     >
-      {filteredFolders.map((folder) => (
-        <motion.div
-          key={folder.id}
-          variants={itemVariants}
-          onMouseEnter={() => setHoveredItem(folder.id)}
-          onMouseLeave={() => setHoveredItem(null)}
-          className="relative"
-        >
-          <Link to={`/teacher/certificates/${folder.id}`} className="block h-full">
-            <motion.div
-              className="bg-white rounded-lg shadow-card p-6 h-full transition-all duration-200"
-              whileHover={{
-                y: -5,
-                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              }}
-            >
+      {folders.map((folder) => {
+        const categoryClass = categoryStyles[folder.category] || categoryStyles['default']
 
+        return (
+          <motion.div
+            key={folder.id}
+            variants={itemVariants}
+            className="relative"
+          >
+            <Link to={`/teacher/certificates/${folder.id}`} className="block h-full">
+              <motion.div
+                className="bg-white rounded-lg shadow-card p-6 h-full transition-all duration-200"
+                whileHover={{
+                  y: -5,
+                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                }}
+              >
+                <div className="flex items-start">
+                  <div className={`p-3 rounded-md mr-4 ${categoryClass}`}>
+                    <FiFolder className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-neutral-800 line-clamp-2">
+                      {folder.name}
+                    </h3>
 
-              {/* For Now using Hardcoded mock data for folders later is replaced by APi call from Backend  */}
-              <div className="flex items-start">
-                <div
-                  className={`p-3 rounded-md mr-4 ${
-                    folder.category === 'Hackathon'
-                      ? 'bg-purple-100 text-purple-600'
-                      : folder.category === 'Game Development'
-                      ? 'bg-red-100 text-red-600'
-                      : folder.category === 'Web Development'
-                      ? 'bg-blue-100 text-blue-600'
-                      : folder.category === 'AI/ML'
-                      ? 'bg-green-100 text-green-600'
-                      : folder.category === 'Cybersecurity'
-                      ? 'bg-yellow-100 text-yellow-600'
-                      : folder.category === 'Data Science'
-                      ? 'bg-indigo-100 text-indigo-600'
-                      : folder.category === 'Mobile Development'
-                      ? 'bg-pink-100 text-pink-600'
-                      : 'bg-teal-100 text-teal-600'
-                  }`}
-                >
-                  <FiFolder className="w-8 h-8" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-neutral-800 line-clamp-2">
-                    {folder.name}
-                  </h3>
-
-                  <div className="mt-3 space-y-2 text-sm text-neutral-600">
-                    <div className="flex items-center">
-                      <FiUser className="w-4 h-4 mr-2" />
-                      <span>{folder.studentName}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <FiBriefcase className="w-4 h-4 mr-2" />
-                      <span>{folder.studentDepartment}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <FiFileText className="w-4 h-4 mr-2" />
-                      <span>
-                        {folder.certificateCount} Certificate
-                        {folder.certificateCount !== 1 ? 's' : ''}
-                      </span>
+                    <div className="mt-3 space-y-2 text-sm text-neutral-600">
+                      <div className="flex items-center">
+                        <FiUser className="w-4 h-4 mr-2" />
+                        <span>{folder.studentName}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <FiBriefcase className="w-4 h-4 mr-2" />
+                        <span>{folder.studentDepartment}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <FiFileText className="w-4 h-4 mr-2" />
+                        <span>
+                          {folder.certificateCount} Certificate
+                          {folder.certificateCount !== 1 ? 's' : ''}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          </Link>
-        </motion.div>
-      ))}
+              </motion.div>
+            </Link>
+          </motion.div>
+        )
+      })}
     </motion.div>
   )
 }
