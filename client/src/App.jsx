@@ -7,12 +7,12 @@ import TeacherLogin from './pages/TeacherLogin'
 import TeacherSignup from './pages/TeacherSignup'
 import TeacherHome from './pages/TeacherHome'
 import CertificatePage from './pages/CertificatePage'
-import StudentLogin from './pages/StudentLogin' // ✅ Import StudentLogin
+import StudentLogin from './pages/StudentLogin'
+import StudentHome from './pages/StudentHome' 
 
-// Protected Route Component (Without AuthContext)
+// Protected Route
 const ProtectedRoute = ({ children }) => {
-  // Simulated login state (change to false if you want to test redirect)
-  const isLoggedIn = true
+  const isLoggedIn = true // 
 
   if (!isLoggedIn) {
     return <Navigate to="/" replace />
@@ -31,9 +31,9 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/teacher/login" element={<TeacherLogin />} />
             <Route path="/teacher/signup" element={<TeacherSignup />} />
-            <Route path="/student/login" element={<StudentLogin />} /> {/* ✅ Student Login Route */}
+            <Route path="/student/login" element={<StudentLogin />} />
 
-            {/* Protected Teacher Routes */}
+            {/* Protected Routes */}
             <Route
               path="/teacher/home"
               element={
@@ -50,8 +50,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/student/home"
+              element={
+                <ProtectedRoute>
+                  <StudentHome /> 
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Fallback Route */}
+            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AnimatePresence>

@@ -15,7 +15,7 @@ const StudentLogin = () => {
     const login = true 
 
     if (login) {
-      navigate('/student/dashboard')  // takes to student home page 
+      navigate('/student/home')  // redirectv to student home page 
     } else {
       setError('Invalid credentials or account not created by teacher')
     }
