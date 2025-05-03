@@ -13,30 +13,36 @@ const FilterSection = ({ onFilterChange }) => {
   useEffect(() => {
     const fetchFiltersData = async () => {
       try {
-        const categoriesResponse = await fetch('/api/categories')
-        const departmentsResponse = await fetch('/api/departments')
-  
-        if (!categoriesResponse.ok || !departmentsResponse.ok) {
-          throw new Error('Failed to fetch filters')
+        const categoriesResponse = await fetch('/api/categories')       // Replace it with  backend API
+        const departmentsResponse = await fetch('/api/departments')           // Replace it with  backend API
+        
+        if (categoriesResponse.ok && departmentsResponse.ok) {
+          const categoriesData = await categoriesResponse.json()
+          const departmentsData = await departmentsResponse.json()
+          
+
+          setCategories(categoriesData)               // Setting  categories from  API response
+          setDepartments(departmentsData)       // Set departments from API response
+        } else {
+
+
+
+          // if api fail , use mock data
+          setCategories(['Website', 'App', 'AI', 'ML','Games', 'Design'])
+          setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
         }
-  
-        const categoriesData = await categoriesResponse.json()
-        const departmentsData = await departmentsResponse.json()
-  
-        setCategories(categoriesData)
-        setDepartments(departmentsData)
       } catch (error) {
         console.error('Error fetching filter data:', error)
-  
-        // Use mock data as fallback
-        setCategories(['Website', 'App', 'AI', 'ML', 'Design'])
-        setDepartments(['Frontend', 'Backend', 'Fullstack', 'AI Team', 'UI/UX'])
+        
+
+        //  If fetching of api  fails use mockdata
+        setCategories(['Hackathons', 'Sports', 'Courses', 'Gaming', 'Design'])
+        setDepartments(['CSE', 'ECE', 'Data Science', 'Mechanical Engineering', 'Automobile Engineering'])
       }
     }
-  
+
     fetchFiltersData()
   }, [])
-  
 
 
 

@@ -101,7 +101,7 @@ const TeacherHome = () => {
                 >
 
 
-                  {/* Credential for */}
+                  {/* Credentials for student*/}
                   <h3 className="text-lg font-semibold mb-4">Teacher Actions</h3>
                   <button
                     onClick={() => setShowCredentialForm(true)}
