@@ -7,10 +7,11 @@ const FolderGrid = ({ selectedCategory }) => {
   const [folders, setFolders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Function to fetch folders from the backend
+  // Function to fetch folders later from backend 
   const fetchFolders = async () => {
     try {
-      // Placeholder API URL, replace with your actual backend URL later
+
+      // replace it with api call later
       const response = await fetch('/api/folders');
       if (!response.ok) throw new Error('Failed to fetch folders');
       const data = await response.json();
@@ -22,17 +23,21 @@ const FolderGrid = ({ selectedCategory }) => {
     }
   };
 
-  // Fetch folders on component mount
+
+
+  // Fetching all folders 
   useEffect(() => {
     fetchFolders();
   }, []);
 
-  // Filter folders based on selected category
+
+  // Filter folders according to category
   const filteredFolders = selectedCategory
     ? folders.filter((folder) => folder.category === selectedCategory)
     : folders;
 
-  // Handle loading state (spinner or skeleton)
+
+  // Handling Loading state
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -52,7 +57,8 @@ const FolderGrid = ({ selectedCategory }) => {
     );
   }
 
-  // Handle empty state when there is no folder
+
+  // Handling empty state when no folder why fetching
   if (folders.length === 0) {
     return (
       <div className="text-center py-12">
@@ -62,6 +68,7 @@ const FolderGrid = ({ selectedCategory }) => {
       </div>
     );
   }
+
 
   // animation of folder cards
   const containerVariants = {
@@ -78,6 +85,7 @@ const FolderGrid = ({ selectedCategory }) => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
+  
 
   // category styles
   const categoryStyles = {
