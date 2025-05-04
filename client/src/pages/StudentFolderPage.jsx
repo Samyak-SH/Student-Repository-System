@@ -145,7 +145,7 @@ const StudentFolderPage = () => {
 
   const fetchFolderData = async (id) => {
 
-    // replace this with backend api call
+    // Using folder id as for now later it will be replaced with student actual usn 
     setFolder({
       title: `Folder ${id}`,
       description: ''
@@ -198,10 +198,6 @@ const StudentFolderPage = () => {
       <main className="flex-grow">
         <div className="section-container">
           <div className="mb-8">
-            <Link to="/student/home" className="inline-flex items-center text-neutral-600 hover:text-neutral-800 mb-4">
-              <FiArrowLeft className="w-5 h-5 mr-2" />
-              Back to Folders
-            </Link>
 
             <div className="flex justify-between items-center">
               <div>
