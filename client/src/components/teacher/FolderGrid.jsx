@@ -1,46 +1,36 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { FiFolder, FiFileText, FiUser, FiBriefcase } from 'react-icons/fi'
-import { motion } from 'framer-motion'
-
-
-// Component to fetch data from backend API
-const useFoldersData = (selectedCategory) => {
-  const [folders, setFolders] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchFolders = async () => {
-      try {
-        setIsLoading(true)
-        const response = await fetch('/api/folders') // use real API later to fetch data of all folders 
-        if (!response.ok) throw new Error('Failed to fetch folders')
-        const data = await response.json()
-        setFolders(data)
-      } catch (error) {
-        console.error(error)
-       
-        //for now returning an empty array
-        setFolders([])
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchFolders()
-  }, [])
-
-  // Filtering folders based on the selected category
-  const filteredFolders = selectedCategory
-    ? folders.filter((folder) => folder.category === selectedCategory)
-    : folders
-
-  return { folders: filteredFolders, isLoading }
-}
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { FiFolder, FiFileText, FiUser, FiBriefcase } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const FolderGrid = ({ selectedCategory }) => {
-  const { folders, isLoading } = useFoldersData(selectedCategory)
+  const [folders, setFolders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Function to fetch folders from the backend
+  const fetchFolders = async () => {
+    try {
+      // Placeholder API URL, replace with your actual backend URL later
+      const response = await fetch('/api/folders');
+      if (!response.ok) throw new Error('Failed to fetch folders');
+      const data = await response.json();
+      setFolders(data);
+    } catch (error) {
+      console.error('Error fetching folders:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch folders on component mount
+  useEffect(() => {
+    fetchFolders();
+  }, []);
+
+  // Filter folders based on selected category
+  const filteredFolders = selectedCategory
+    ? folders.filter((folder) => folder.category === selectedCategory)
+    : folders;
 
   // Handle loading state (spinner or skeleton)
   if (isLoading) {
@@ -59,7 +49,7 @@ const FolderGrid = ({ selectedCategory }) => {
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   // Handle empty state when there is no folder
@@ -70,7 +60,7 @@ const FolderGrid = ({ selectedCategory }) => {
         <h3 className="text-xl font-medium text-neutral-700">No folders found</h3>
         <p className="text-neutral-500 mt-2">Try changing your filters or search query</p>
       </div>
-    )
+    );
   }
 
   // animation of folder cards
@@ -82,14 +72,14 @@ const FolderGrid = ({ selectedCategory }) => {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  };
 
-  //  category styles 
+  // category styles
   const categoryStyles = {
     'Hackathon': 'bg-purple-100 text-purple-600',
     'Game Development': 'bg-red-100 text-red-600',
@@ -99,7 +89,7 @@ const FolderGrid = ({ selectedCategory }) => {
     'Data Science': 'bg-indigo-100 text-indigo-600',
     'Mobile Development': 'bg-pink-100 text-pink-600',
     'default': 'bg-teal-100 text-teal-600',
-  }
+  };
 
   return (
     <motion.div
@@ -108,8 +98,8 @@ const FolderGrid = ({ selectedCategory }) => {
       initial="hidden"
       animate="visible"
     >
-      {folders.map((folder) => {
-        const categoryClass = categoryStyles[folder.category] || categoryStyles['default']
+      {filteredFolders.map((folder) => {
+        const categoryClass = categoryStyles[folder.category] || categoryStyles['default'];
 
         return (
           <motion.div
@@ -156,10 +146,10 @@ const FolderGrid = ({ selectedCategory }) => {
               </motion.div>
             </Link>
           </motion.div>
-        )
+        );
       })}
     </motion.div>
-  )
-}
+  );
+};
 
-export default FolderGrid
+export default FolderGrid;

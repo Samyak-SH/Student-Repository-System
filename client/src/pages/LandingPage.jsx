@@ -205,7 +205,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="bg-neutral-800 text-white py-8">
         <div className="container mx-auto px-6 text-center">
-          <p>© {new Date().getFullYear()} CertVault. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} CertifyHub. All rights reserved.</p>
         </div>
       </footer>
     </div>
