@@ -8,11 +8,14 @@ import TeacherSignup from './pages/TeacherSignup'
 import TeacherHome from './pages/TeacherHome'
 import CertificatePage from './pages/CertificatePage'
 import StudentLogin from './pages/StudentLogin'
-import StudentHome from './pages/StudentHome' 
+import StudentHome from './pages/StudentHome'
+import StudentFolderPage from './pages/StudentFolderPage' 
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = true // 
+
+
+  const isLoggedIn = true              // Replace it with real api from backend from auth logic 
 
   if (!isLoggedIn) {
     return <Navigate to="/" replace />
@@ -27,13 +30,15 @@ function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <Routes>
-            {/* Public Routes */}
+
+         
             <Route path="/" element={<LandingPage />} />
             <Route path="/teacher/login" element={<TeacherLogin />} />
             <Route path="/teacher/signup" element={<TeacherSignup />} />
             <Route path="/student/login" element={<StudentLogin />} />
 
-            {/* Protected Routes */}
+
+           
             <Route
               path="/teacher/home"
               element={
@@ -54,7 +59,15 @@ function App() {
               path="/student/home"
               element={
                 <ProtectedRoute>
-                  <StudentHome /> 
+                  <StudentHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/folder/:folderId"
+              element={
+                <ProtectedRoute>
+                  <StudentFolderPage />
                 </ProtectedRoute>
               }
             />
