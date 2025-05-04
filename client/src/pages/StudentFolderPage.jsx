@@ -15,7 +15,7 @@ const UploadCertificateModal = ({ onClose, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData) // 🔁 Backend: This data will be sent to backend later
+    onSubmit(formData)               // data will be  sent to backend later
   }
 
   const handleFileChange = (e) => {
@@ -135,44 +135,58 @@ const StudentFolderPage = () => {
     description: ''
   })
 
+
   useEffect(() => {
-    fetchFolderData(folderId)         // 🔁 Backend: Load folder data from server
-    fetchCertificates(folderId)       // 🔁 Backend: Load certificates list from server
+    fetchFolderData(folderId)         // folder will be loaded from server 
+    fetchCertificates(folderId)       // certificate list is also loaded from server
   }, [folderId])
 
+
+
   const fetchFolderData = async (id) => {
-    // 🔁 Backend: Replace with actual API call to fetch folder info
+
+    // replace this with backend api call
     setFolder({
       title: `Folder ${id}`,
-      description: 'This is a folder loaded from backend'
+      description: ''
     })
   }
 
+
   const fetchCertificates = async (folderId) => {
-    // 🔁 Backend: Replace with actual API call to fetch certificates for this folder
+    
+    // replace this with api call to fetch folder
     setCertificates([])
   }
 
+
   const handleUploadCertificate = async (data) => {
     const newCert = {
-      id: Date.now().toString(), // 🔁 Backend: Replace with real ID from server response
+      id: Date.now().toString(),    // replace this with real id from server
       ...data,
-      fileUrl: URL.createObjectURL(data.file) // 🔁 Backend: Should be file URL returned after uploading
+
+      fileUrl: URL.createObjectURL(data.file)      // return file after uploading 
     }
 
-    // 🔁 Backend: Send certificate data and file to server (use FormData)
+    
+    // send all data uploaded by student to server 
     setCertificates([newCert, ...certificates])
     setShowUploadModal(false)
   }
 
+
+
   const handleEditCertificate = async (certificate) => {
-    // 🔁 Backend: Update certificate details (PUT/PATCH request)
+
+    // update certificate details()
     console.log('Edit certificate:', certificate)
   }
 
+
   const handleDeleteCertificate = async (certificateId) => {
     if (window.confirm('Are you sure you want to delete this certificate?')) {
-      // 🔁 Backend: Call API to delete certificate from database
+
+      //call api from backend to dellete file 
       setCertificates(certificates.filter(cert => cert.id !== certificateId))
     }
   }
