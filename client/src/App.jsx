@@ -10,12 +10,12 @@ import CertificatePage from './pages/CertificatePage'
 import StudentLogin from './pages/StudentLogin'
 import StudentHome from './pages/StudentHome'
 import StudentFolderPage from './pages/StudentFolderPage' 
+import TeacherProfile from './pages/TeacherProfile'
+import StudentProfile from './pages/StudentProfile'
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
-
-
-  const isLoggedIn = true              // Replace it with real api from backend from auth logic 
+  const isLoggedIn = true // Replace with real auth check
 
   if (!isLoggedIn) {
     return <Navigate to="/" replace />
@@ -30,15 +30,11 @@ function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <Routes>
-
-         
             <Route path="/" element={<LandingPage />} />
             <Route path="/teacher/login" element={<TeacherLogin />} />
             <Route path="/teacher/signup" element={<TeacherSignup />} />
             <Route path="/student/login" element={<StudentLogin />} />
 
-
-           
             <Route
               path="/teacher/home"
               element={
@@ -68,6 +64,24 @@ function App() {
               element={
                 <ProtectedRoute>
                   <StudentFolderPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Profile Routes */}
+            <Route
+              path="/teacher-profile"
+              element={
+                <ProtectedRoute>
+                  <TeacherProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student-profile"
+              element={
+                <ProtectedRoute>
+                  <StudentProfile />
                 </ProtectedRoute>
               }
             />

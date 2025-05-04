@@ -5,16 +5,30 @@ import { motion } from 'framer-motion'
 
 const TeacherLogin = () => {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+  const [formData, setFormData] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+
+  // Replace it with backend call later
+  const loginTeacher = async ({ email, password }) => {
+
+    console.log('Logging in with:', { email, password })
+    
+
+     // For now simulate successfull login
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ success: true, userType: 'teacher' })
+      }, 1000)
+    })
+
+    
   }
 
   const handleSubmit = async (e) => {
@@ -29,15 +43,16 @@ const TeacherLogin = () => {
     setLoading(true)
 
     try {
-      //  for backend API call
-      console.log('Form submitted:', formData)
-      
-      // for now it simulate to home page 
-      setTimeout(() => {
-        navigate('/teacher/home')
-      }, 1000)
+      const response = await loginTeacher(formData)
 
+      if (response.success) {
+        sessionStorage.setItem('userType', response.userType)
+        navigate('/teacher/home')
+      } else {
+        setError('Invalid email or password')
+      }
     } catch (err) {
+      console.error(err)
       setError('Login failed. Please try again.')
     } finally {
       setLoading(false)
@@ -52,13 +67,10 @@ const TeacherLogin = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-         
+
         </motion.div>
       </div>
 
-
-
-{/* //Login credentials */}
       <div className="flex-grow flex items-center justify-center px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -132,9 +144,6 @@ const TeacherLogin = () => {
             </button>
           </form>
 
-
-
-   {/* if account signup here button */}
           <p className="mt-6 text-center text-neutral-600">
             Don't have an account?{' '}
             <Link

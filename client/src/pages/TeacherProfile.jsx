@@ -4,7 +4,7 @@ import Footer from '../components/common/Footer'
 import { motion } from 'framer-motion'
 import { FiUser, FiMail, FiEdit2, FiSave, FiX } from 'react-icons/fi'
 
-const Profile = () => {
+const TeacherProfile  = () => {
 
   // Make backend call here to fetch actual user profile 
   const currentUser = {
@@ -84,7 +84,7 @@ const Profile = () => {
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <h1 className="text-3xl font-bold text-neutral-800 mb-2">Profile</h1>
+            <h1 className="text-3xl font-bold text-neutral-800 mb-2">Teacher Profile</h1>
             <p className="text-neutral-600">Manage your personal information</p>
           </motion.div>
 
@@ -265,4 +265,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default TeacherProfile 

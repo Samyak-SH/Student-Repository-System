@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const StudentLogin = () => {
@@ -11,11 +11,17 @@ const StudentLogin = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    // For now using dummy value for login later it replaced by Api call from backend
-    const login = true 
+    // For now  passing dummy value true for login
+    const login = true
 
     if (login) {
-      navigate('/student/home')  // redirectv to student home page 
+
+      // Store user  in sessionStorage  to mark that user login as student 
+      sessionStorage.setItem('userType', 'student') 
+
+
+      
+      navigate('/student/home')
     } else {
       setError('Invalid credentials or account not created by teacher')
     }
@@ -29,7 +35,7 @@ const StudentLogin = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-         
+        
         </motion.div>
       </div>
 
@@ -41,8 +47,7 @@ const StudentLogin = () => {
           transition={{ duration: 0.5 }}
           className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md space-y-6"
         >
-            
-            <div className="text-center mb-8">
+          <div className="text-center mb-8">
             <div className="inline-block p-3 rounded-full bg-primary-100 text-primary-600 mb-4">
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

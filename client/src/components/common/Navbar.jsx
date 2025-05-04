@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FiUser, FiLogOut, FiMenu, FiX } from 'react-icons/fi'
 
@@ -7,15 +7,33 @@ const Navbar = () => {
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  const getUserType = () => {
+    return sessionStorage.getItem('userType')   // check student or teacher 
+  }
+
+
+
   const handleLogout = async () => {
     try {
-      
-      // Call the logout endpoint from backend 
 
-      // Redirecting user after logout for now
+      // later call Backend logout 
+      sessionStorage.clear() 
       navigate('/')
     } catch (err) {
       console.error('Logout failed:', err)
+    }
+  }
+
+
+  //Profile Handle for both teacher and student 
+  const handleProfileClick = () => {
+    const userType = getUserType()
+    if (userType === 'teacher') {
+      navigate('/teacher-profile')
+    } else if (userType === 'student') {
+      navigate('/student-profile')
+    } else {
+      console.error('User type not found')
     }
   }
 
@@ -37,7 +55,6 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-
           {/* Logo */}
           <Link to="/home" className="flex items-center space-x-2">
             <div className="rounded-full bg-primary-500 text-white p-2">
@@ -48,16 +65,16 @@ const Navbar = () => {
             <span className="text-xl font-semibold text-primary-800">CertifyHub</span>
           </Link>
 
-          {/* Profile section */}
-          <div className="hidden md:flex items-center space-x-6">
 
-            <Link
-              to="/profile"
+          {/* Profile Menu */}
+          <div className="hidden md:flex items-center space-x-6">
+            <button
+              onClick={handleProfileClick}
               className="flex items-center space-x-1 text-neutral-700 hover:text-primary-600 transition-colors"
             >
               <FiUser className="w-5 h-5" />
               <span>Profile</span>
-            </Link>
+            </button>
             <button
               onClick={handleLogout}
               className="flex items-center space-x-1 text-neutral-700 hover:text-primary-600 transition-colors"
@@ -67,7 +84,8 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Profile menu*/}
+
+         
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -78,6 +96,7 @@ const Navbar = () => {
           </div>
         </div>
 
+
         {isMenuOpen && (
           <motion.div
             className="md:hidden mt-4 space-y-4 py-2"
@@ -86,16 +105,18 @@ const Navbar = () => {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Link
-              to="/profile"
-              className="block py-2 px-4 text-neutral-700 hover:bg-neutral-100 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
+            <button
+              onClick={() => {
+                handleProfileClick()
+                setIsMenuOpen(false)
+              }}
+              className="block w-full text-left py-2 px-4 text-neutral-700 hover:bg-neutral-100 rounded-md"
             >
               <div className="flex items-center space-x-2">
                 <FiUser className="w-5 h-5" />
                 <span>Profile</span>
               </div>
-            </Link>
+            </button>
             <button
               onClick={() => {
                 setIsMenuOpen(false)
