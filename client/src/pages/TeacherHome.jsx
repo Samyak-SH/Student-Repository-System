@@ -5,9 +5,10 @@ import SearchBar from '../components/common/SearchBar'
 import FilterSection from '../components/teacher/FilterSection'
 import FolderGrid from '../components/teacher/FolderGrid'
 import StudentCredentialForm from '../components/teacher/StudentCredentialForm'
-import { getAllFolders } from '../utils/mockData'
 import { motion } from 'framer-motion'
 import { FiPlus, FiHelpCircle } from 'react-icons/fi'
+
+
 
 const TeacherHome = () => {
   const [folders, setFolders] = useState([])
@@ -18,17 +19,32 @@ const TeacherHome = () => {
   const [showCredentialForm, setShowCredentialForm] = useState(false)
 
 
-  // Replace this function with real API call from backend
+
+  // Fetch folders from backend
   const fetchFolders = async () => {
     setIsLoading(true)
     try {
-      const data = getAllFolders()    //replace this with api call
+      const response = await fetch('/api/folders') 
+      const data = await response.json()
       setFolders(data)
       setFilteredFolders(data)
     } catch (error) {
       console.error('Error fetching folders:', error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+
+
+  // Fetch certificates for a specific folder
+  const fetchCertificatesForFolder = async (folderId) => {
+    try {
+      const response = await fetch(`/api/folders/${folderId}/certificates`) 
+      const data = await response.json()
+
+    } catch (error) {
+      console.error('Error fetching certificates:', error)
     }
   }
 
@@ -47,7 +63,9 @@ const TeacherHome = () => {
       )
     }
 
+
     if (filters.category) {
+    
       results = results.filter(folder => folder.category === filters.category)
     }
 
@@ -60,9 +78,11 @@ const TeacherHome = () => {
 
   const handleSearch = (query) => setSearchQuery(query)
   const handleFilterChange = (newFilters) => setFilters(newFilters)
+  
   const handleCreateStudentSuccess = () => {
     setShowCredentialForm(false)
    
+    fetchFolders()
   }
 
   return (
@@ -81,13 +101,12 @@ const TeacherHome = () => {
             <p className="text-neutral-600">Manage student certificates and credentials</p>
           </motion.div>
 
-
-           {/* SearchBar */}
+          {/* SearchBar */}
           <div className="mb-8">
             <SearchBar onSearch={handleSearch} />
           </div>
 
-         {/* Filtersection */}
+          {/* Filtersection */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-1">
               <div className="space-y-6">
@@ -99,9 +118,7 @@ const TeacherHome = () => {
                   transition={{ duration: 0.5, delay: 0.4 }}
                   className="bg-white rounded-lg shadow-card p-5"
                 >
-
-
-                  {/* Credentials for student*/}
+                  {/* Credentials for student */}
                   <h3 className="text-lg font-semibold mb-4">Teacher Actions</h3>
                   <button
                     onClick={() => setShowCredentialForm(true)}
@@ -124,7 +141,7 @@ const TeacherHome = () => {
             </div>
 
             <div className="lg:col-span-3">
-              <FolderGrid folders={filteredFolders} isLoading={isLoading} />
+              <FolderGrid folders={filteredFolders} isLoading={isLoading} onFolderClick={fetchCertificatesForFolder} />
             </div>
           </div>
         </div>

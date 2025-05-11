@@ -4,65 +4,81 @@ import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
 import { motion } from 'framer-motion'
 import { FiArrowLeft, FiDownload, FiEye, FiCalendar, FiAward } from 'react-icons/fi'
-import { getCertificatesForFolder } from '../utils/mockData'
 
 const CertificatePage = () => {
   const { folderId } = useParams()
   const [certificates, setCertificates] = useState([])
   const [selectedCertificate, setSelectedCertificate] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-  
-  useEffect(() => {
 
-    // Fetching certificates for folder
+  useEffect(() => {
     const fetchCertificates = async () => {
       setIsLoading(true)
-
       try {
 
-        // In a real api Call, the mockdata is replace by real api cal from backend 
 
-
-        const data = getCertificatesForFolder(folderId)       // Using Mockdata for Now
+        // fetch certificate from api call from backend 
+        const response = await fetch(`/api/folders/${folderId}/certificates`) 
+        if (!response.ok) throw new Error('Failed to fetch certificates')
+        const data = await response.json() 
         setCertificates(data)
-        
-        if (data.length > 0) {
-          setSelectedCertificate(data[0])
-        }
+        if (data.length > 0) setSelectedCertificate(data[0])
       } catch (error) {
         console.error('Error fetching certificates:', error)
       } finally {
         setIsLoading(false)
       }
     }
-    
+
     fetchCertificates()
   }, [folderId])
-  
 
-  const handleDownload = (certificate) => {
-    
-    // in real call , this trigger file download 
-    console.log('Downloading certificate:', certificate.name)
-    alert(`Downloading ${certificate.name}`)
+
+
+
+  const handleDownload = async (certificate) => {
+    try {
+
+
+      // Download part
+      const response = await fetch(`/api/certificates/${certificate.id}/download`) 
+      if (!response.ok) throw new Error('Download failed')
+
+      const blob = await response.blob()
+         const url = window.URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+      link.download = `${certificate.name}.pdf` 
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+
+    } catch (error) {
+      console.error('Error downloading certificate:', error)
+      alert('Failed to download certificate.')
+    }
   }
-  
+
+
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
+      transition: {
         delayChildren: 0.2,
         staggerChildren: 0.1
       }
     }
   }
+
   
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 }
   }
-  
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col bg-neutral-50">
@@ -77,11 +93,11 @@ const CertificatePage = () => {
       </div>
     )
   }
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50">
       <Navbar />
-      
+
       <main className="flex-grow">
         <div className="section-container">
           <motion.div
@@ -91,7 +107,7 @@ const CertificatePage = () => {
             className="mb-8"
           >
             <div className="flex items-center">
-              <Link 
+              <Link
                 to="/teacher/home"
                 className="mr-4 p-2 rounded-full bg-white shadow-sm text-neutral-700 hover:bg-neutral-100 transition-colors"
               >
@@ -105,7 +121,7 @@ const CertificatePage = () => {
               </div>
             </div>
           </motion.div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-1">
               <motion.div
@@ -115,7 +131,7 @@ const CertificatePage = () => {
                 className="bg-white rounded-lg shadow-card p-5"
               >
                 <h3 className="text-lg font-semibold mb-6">Certificate List</h3>
-                
+
                 {certificates.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-neutral-500">No certificates found</p>
@@ -159,7 +175,7 @@ const CertificatePage = () => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleDownload(certificate)
+                                handleDownload(certificate) 
                               }}
                               className="p-2 text-primary-600 hover:bg-primary-50 rounded-full"
                               title="Download"
@@ -174,7 +190,7 @@ const CertificatePage = () => {
                 )}
               </motion.div>
             </div>
-            
+
             <div className="lg:col-span-2">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -202,7 +218,7 @@ const CertificatePage = () => {
                         <span>Download</span>
                       </button>
                     </div>
-                    
+
                     <div className="border border-neutral-200 rounded-lg overflow-hidden">
                       <img
                         src={selectedCertificate.imageUrl}
@@ -221,7 +237,7 @@ const CertificatePage = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   )
