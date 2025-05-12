@@ -1,48 +1,53 @@
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { FiPlus, FiHelpCircle, FiDownload } from 'react-icons/fi'
+
+
+
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
 import SearchBar from '../components/common/SearchBar'
 import FilterSection from '../components/teacher/FilterSection'
 import FolderGrid from '../components/teacher/FolderGrid'
 import StudentCredentialForm from '../components/teacher/StudentCredentialForm'
-import { motion } from 'framer-motion'
-import { FiPlus, FiHelpCircle } from 'react-icons/fi'
+
 
 
 
 const TeacherHome = () => {
   const [folders, setFolders] = useState([])
-  const [filteredFolders, setFilteredFolders] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
+     const [filteredFolders, setFilteredFolders] = useState([])
+ const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState({ category: '', department: '' })
-  const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
   const [showCredentialForm, setShowCredentialForm] = useState(false)
 
 
-
-  // Fetch folders from backend
+   //Fetch all folder later when connected to backend 
   const fetchFolders = async () => {
     setIsLoading(true)
     try {
       const response = await fetch('/api/folders') 
       const data = await response.json()
+      
       setFolders(data)
       setFilteredFolders(data)
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error fetching folders:', error)
-    } finally {
+    } 
+    finally {
       setIsLoading(false)
     }
   }
 
 
-
-  // Fetch certificates for a specific folder
+  //call real api from backend to get certificates for all folders
   const fetchCertificatesForFolder = async (folderId) => {
     try {
       const response = await fetch(`/api/folders/${folderId}/certificates`) 
       const data = await response.json()
-
+    
     } catch (error) {
       console.error('Error fetching certificates:', error)
     }
@@ -52,6 +57,10 @@ const TeacherHome = () => {
     fetchFolders()
   }, [])
 
+
+
+
+  //fetch folder based on filter through backend
   useEffect(() => {
     let results = folders
 
@@ -59,13 +68,11 @@ const TeacherHome = () => {
       const query = searchQuery.toLowerCase()
       results = results.filter(folder =>
         folder.studentName.toLowerCase().includes(query) ||
-        folder.name.toLowerCase().includes(query)
+            folder.name.toLowerCase().includes(query)
       )
     }
 
-
     if (filters.category) {
-    
       results = results.filter(folder => folder.category === filters.category)
     }
 
@@ -78,11 +85,26 @@ const TeacherHome = () => {
 
   const handleSearch = (query) => setSearchQuery(query)
   const handleFilterChange = (newFilters) => setFilters(newFilters)
-  
+
   const handleCreateStudentSuccess = () => {
     setShowCredentialForm(false)
-   
-    fetchFolders()
+    fetchFolders() 
+  }
+
+
+
+  //For csv file to add credentual oof student
+  const downloadCredentials = () => {
+    const csvHeader = 'Student Name,Email,Department,Folder Name\n'
+    const csvRows = folders.map(f =>
+      `${f.studentName},${f.studentEmail || ''},${f.studentDepartment},${f.name}`
+    )
+    const csvContent = csvHeader + csvRows.join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+
+    window.open(url) 
   }
 
   return (
@@ -101,12 +123,10 @@ const TeacherHome = () => {
             <p className="text-neutral-600">Manage student certificates and credentials</p>
           </motion.div>
 
-          {/* SearchBar */}
           <div className="mb-8">
             <SearchBar onSearch={handleSearch} />
           </div>
 
-          {/* Filtersection */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-1">
               <div className="space-y-6">
@@ -118,8 +138,8 @@ const TeacherHome = () => {
                   transition={{ duration: 0.5, delay: 0.4 }}
                   className="bg-white rounded-lg shadow-card p-5"
                 >
-                  {/* Credentials for student */}
                   <h3 className="text-lg font-semibold mb-4">Teacher Actions</h3>
+
                   <button
                     onClick={() => setShowCredentialForm(true)}
                     className="btn-primary w-full justify-center py-3 mb-4"
@@ -128,11 +148,19 @@ const TeacherHome = () => {
                     <span>Create Student Account</span>
                   </button>
 
-                  <div className="p-4 bg-blue-50 rounded-md">
+                  <button
+                    onClick={downloadCredentials}
+                    className="btn-secondary w-full justify-center py-3"
+                  >
+                    <FiDownload className="mr-2" />
+                    <span>Add Credential of Student </span>
+                  </button>
+
+                  <div className="p-4 mt-4 bg-blue-50 rounded-md">
                     <div className="flex items-start">
                       <FiHelpCircle className="text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
                       <p className="text-sm text-blue-700">
-                        Create accounts for students to give them access to upload their certificates.
+                        Create accounts for students to give them access to upload their certificates. Also add each student  credential in CSV file.
                       </p>
                     </div>
                   </div>
@@ -141,7 +169,11 @@ const TeacherHome = () => {
             </div>
 
             <div className="lg:col-span-3">
-              <FolderGrid folders={filteredFolders} isLoading={isLoading} onFolderClick={fetchCertificatesForFolder} />
+              <FolderGrid
+                folders={filteredFolders}
+                isLoading={isLoading}
+                onFolderClick={fetchCertificatesForFolder}
+              />
             </div>
           </div>
         </div>
@@ -149,7 +181,7 @@ const TeacherHome = () => {
 
       <Footer />
 
-      {showCredentialForm && (
+            {showCredentialForm && (
         <StudentCredentialForm
           onClose={() => setShowCredentialForm(false)}
           onSuccess={handleCreateStudentSuccess}
