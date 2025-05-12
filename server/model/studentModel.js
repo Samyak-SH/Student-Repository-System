@@ -9,7 +9,7 @@ const studentSchema = mongoose.Schema({
     password: { type: String, required: true }
 })
 
-const studentModel = mongoose.model("SCR", studentSchema, "students");
+const studentModel = mongoose.model("students", studentSchema);
 
 const getStudent = async (usn, cb)=>{
     try{

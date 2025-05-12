@@ -3,26 +3,18 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiX } from 'react-icons/fi'
+import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiX, FiUpload } from 'react-icons/fi'
 
 const CreateFolderModal = ({ onClose, onSubmit }) => {
-  const [formData, setFormData] = useState({
-     usn: '',
-    department: '',
-    title: '',
-    date: new Date().toISOString().split('T')[0],
-   
-  })
+  const [title, setTitle] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData)
+    onSubmit({ title })
   }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    
-    {/* Folder creating part */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -37,53 +29,16 @@ const CreateFolderModal = ({ onClose, onSubmit }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Title</label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="input-field"
-              required
-            />
-          </div>
-
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Usn</label>
-            <input
-              type="text"
-              value={formData.user}
-              onChange={(e) => setFormData({ ...formData, user: e.target.value })}
-              className="input-field"
-              required
-            />
-          </div>
-
           <div className="mb-6">
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Department</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Folder Name</label>
             <input
               type="text"
-              value={formData.department}
-              onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="input-field"
               required
             />
           </div>
-
-  
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Date</label>
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className="input-field"
-              required
-            />
-          </div>
-
-        
 
           <div className="flex justify-end space-x-3">
             <button type="button" onClick={onClose} className="btn-outline">Cancel</button>
@@ -95,7 +50,7 @@ const CreateFolderModal = ({ onClose, onSubmit }) => {
   )
 }
 
-const FolderCard = ({ folder, onEdit, onDelete }) => (
+const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -103,19 +58,15 @@ const FolderCard = ({ folder, onEdit, onDelete }) => (
   >
     <div className="flex justify-between items-start">
       <div className="flex-1">
-        <Link to={`/student/folder/${folder.id}`} className="block">
+        <button onClick={() => onEnter(folder)} className="block w-full text-left">
           <div className="flex items-center mb-3">
             <div className="p-2 bg-primary-100 text-primary-600 rounded-lg mr-3">
               <FiFolder className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-semibold text-neutral-800 line-clamp-1">{folder.user}</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 line-clamp-1">{folder.title}</h3>
           </div>
-        
-          
-          <p className="text-sm text-green-700">{folder.title}</p>
-          <p className="text-sm text-blue-600"> {folder.department}</p>
           <p className="text-sm text-neutral-500">Created on {folder.date}</p>
-        </Link>
+        </button>
       </div>
 
       <div className="flex space-x-2 ml-4">
@@ -131,43 +82,50 @@ const FolderCard = ({ folder, onEdit, onDelete }) => (
 )
 
 const StudentHome = () => {
-  const currentUser = { firstName: 'Student', user: 'student123', department: 'Computer Science' }
-
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [folders, setFolders] = useState([])
+  const [currentPath, setCurrentPath] = useState([])
 
-  //  Fetch folders from backend 
   useEffect(() => {
-
+    // Fetch folders from backend (optional)
   }, [])
 
   const handleCreateFolder = (folderData) => {
     const newFolder = {
-      id: Date.now().toString(), // Replace it with backend generated id 
-      ...folderData
+      id: Date.now().toString(),
+      title: folderData.title,
+      date: new Date().toISOString().split('T')[0],
+      path: [...currentPath]
     }
-
-    
-
     setFolders([newFolder, ...folders])
     setShowCreateModal(false)
   }
 
   const handleEditFolder = (folder) => {
-
-    // Update folders 
     console.log('Edit folder:', folder)
   }
 
   const handleDeleteFolder = (folderId) => {
     if (window.confirm('Are you sure you want to delete this folder?')) {
-
-      // Send delete request to backend
-
-
       setFolders(folders.filter(folder => folder.id !== folderId))
     }
   }
+
+  const handleEnterFolder = (folder) => {
+    setCurrentPath([...currentPath, folder.title])
+  }
+
+  const handleBack = () => {
+    if (currentPath.length === 0) return
+    const newPath = [...currentPath]
+    newPath.pop()
+    setCurrentPath(newPath)
+  }
+
+  const currentFolders = folders.filter(folder => {
+    if (folder.path.length !== currentPath.length) return false
+    return folder.path.every((val, i) => val === currentPath[i])
+  })
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50">
@@ -177,19 +135,36 @@ const StudentHome = () => {
         <div className="section-container">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-neutral-800 mb-2">Welcome, {currentUser.firstName}!</h1>
-              <p className="text-neutral-600">Manage your certificates and achievements</p>
+              <h1 className="text-3xl font-bold text-neutral-800 mb-2">Your Certificates</h1>
+              <p className="text-neutral-600">Path: <span className="font-mono">/{currentPath.join('/')}</span></p>
             </div>
 
-            <button onClick={() => setShowCreateModal(true)} className="btn-primary">
-              <FiPlus className="mr-2" /> Create Folder
-            </button>
+            <div className="flex gap-3">
+              <button className="btn-outline">
+                <FiUpload className="mr-2" /> Upload Certificate
+              </button>
+              <button onClick={() => setShowCreateModal(true)} className="btn-primary">
+                <FiPlus className="mr-2" /> Create Folder
+              </button>
+            </div>
           </div>
 
+          {currentPath.length > 0 && (
+            <div className="mb-4">
+              <button onClick={handleBack} className="btn-outline">← Back</button>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {folders.length > 0 ? (
-              folders.map(folder => (
-                <FolderCard key={folder.id} folder={folder} onEdit={handleEditFolder} onDelete={handleDeleteFolder} />
+            {currentFolders.length > 0 ? (
+              currentFolders.map(folder => (
+                <FolderCard
+                  key={folder.id}
+                  folder={folder}
+                  onEdit={handleEditFolder}
+                  onDelete={handleDeleteFolder}
+                  onEnter={handleEnterFolder}
+                />
               ))
             ) : (
               <div className="col-span-full text-center py-12">

@@ -34,7 +34,6 @@ app.get("/test", (req,res)=>{res.send("server running")});
 // app.get("/singin")
 // app.get("/signup")
 
-// app.post("/uploadCertificate") //only student side
 // app.post("/editCertificate") //only student side
 app.post("/createStudent", createStudent) //does not require jwt verification
 app.post("/createTeacher", createTeacher)

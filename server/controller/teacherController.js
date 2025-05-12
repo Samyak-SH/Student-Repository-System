@@ -27,7 +27,7 @@ const createTeacher = (req,res)=>{
     }
     //todo create JWT and return to user
     teacherModel.createTeacher(teacher, (result)=>{
-        if(err){
+        if(result.err){
             console.error(result.message, result.error.message);
             return res.status(500).send({message : result.message, error:result.error.message});
         }
