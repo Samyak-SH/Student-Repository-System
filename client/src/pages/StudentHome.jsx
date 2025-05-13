@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
+import SearchBar from '../components/common/SearchBar'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiX, FiUpload } from 'react-icons/fi'
 import axios from 'axios'
@@ -94,16 +96,23 @@ const UploadCertificateModal = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Tag</label>
-            <select
-              value={formData.tag}
-              onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-              className="input-field"
-            >
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Category</label>
+            <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <option key={tag} value={tag}>{tag}</option>
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, tag })}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    formData.tag === tag
+                      ? 'bg-primary-100 text-primary-700 border border-primary-300'
+                      : 'bg-neutral-100 text-neutral-600 border border-neutral-200 hover:bg-neutral-200'
+                  }`}
+                >
+                  {tag}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           <div className="mb-6">
@@ -157,34 +166,49 @@ const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
     </div>
   </motion.div>
 )
-const getCertificiates = async () => {
-  console.log("called");
-  try {
-    const token = localStorage.getItem("jwt_token_student");
-
-    const result = await axios.get(`${SERVER_URL}/student/certificate`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    if(result.data.length > 0){
-      
-    }
-    console.log(result.data.length);
-  } catch (err) {
-    console.error(err);
-  }
-};
 
 const StudentHome = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [folders, setFolders] = useState([])
   const [currentPath, setCurrentPath] = useState([])
+  const [categories, setCategories] = useState(['course', 'workshop', 'internship', 'hackathon', 'skill', 'NSS', 'sports'])
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [certificates, setCertificates] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
+ const fetchCertificates = async () => {
+  try {
+    const token = localStorage.getItem("jwt_token_student");
+    const response = await axios.get(`${SERVER_URL}/student/certificates`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    console.log("API Response:", response.data); // Debug log
+    
+    // Check both possible response structures
+    if (response.data.certificates) {
+      setCertificates(response.data.certificates);
+    } else if (Array.isArray(response.data)) {
+      setCertificates(response.data);
+    } else {
+      console.error("Unexpected response format:", response.data);
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
-    getCertificiates();
-  }, [])
+    fetchCertificates();
+  }, []);
+
+  const handleCategoryChange = (category) => {
+    const newCategory = category === selectedCategory ? '' : category
+    setSelectedCategory(newCategory)
+  }
 
   const handleCreateFolder = (folderData) => {
     const newFolder = {
@@ -219,6 +243,8 @@ const StudentHome = () => {
         })
         alert('Certificate uploaded successfully!')
         setShowUploadModal(false)
+        // Fetch updated certificates after successful upload
+        fetchCertificates();
       } catch (error) {
         console.error('Upload failed:', error)
         alert('Failed to upload certificate.')
@@ -256,6 +282,19 @@ const StudentHome = () => {
     return folder.path.every((val, i) => val === currentPath[i])
   })
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  // Filter certificates based on both search query and selected category
+  const filteredCertificates = certificates.filter(cert => {
+    const matchesCategory = selectedCategory ? cert.Tag === selectedCategory : true;
+    const matchesSearch = searchQuery
+      ? cert.Title.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50">
       <Navbar />
@@ -265,45 +304,115 @@ const StudentHome = () => {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-3xl font-bold text-neutral-800 mb-2">Your Certificates</h1>
-              <p className="text-neutral-600">Path: <span className="font-mono">/{currentPath.join('/')}</span></p>
+              <p className="text-neutral-600"><span className="font-mono">{currentPath.join('/')}</span></p>
             </div>
 
             <div className="flex gap-3">
               <button onClick={() => setShowUploadModal(true)} className="btn-outline">
                 <FiUpload className="mr-2" /> Upload Certificate
               </button>
-              <button onClick={() => setShowCreateModal(true)} className="btn-primary">
-                <FiPlus className="mr-2" /> Create Folder
-              </button>
             </div>
           </div>
 
-          {currentPath.length > 0 && (
-            <div className="mb-4">
-              <button onClick={handleBack} className="btn-outline">← Back</button>
-            </div>
-          )}
+          {/* Search Bar */}
+          <div className="mb-6">
+            <SearchBar onSearch={handleSearch} />
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentFolders.length > 0 ? (
-              currentFolders.map(folder => (
-                <FolderCard
-                  key={folder.id}
-                  folder={folder}
-                  onEdit={handleEditFolder}
-                  onDelete={handleDeleteFolder}
-                  onEnter={handleEnterFolder}
-                />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <div className="bg-neutral-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <FiFolder className="w-8 h-8 text-neutral-400" />
+          <div className="flex gap-6">
+            {/* Left Sidebar with Category Filter */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="w-64 shrink-0"
+            >
+              <div className="bg-white rounded-lg shadow-card p-5 sticky top-4">
+                <h3 className="text-lg font-semibold mb-3">Filter by Category</h3>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => handleCategoryChange(category)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                        selectedCategory === category
+                          ? 'bg-primary-100 text-primary-700 border border-primary-300'
+                          : 'bg-neutral-100 text-neutral-600 border border-neutral-200 hover:bg-neutral-200'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
                 </div>
-                <h3 className="text-xl font-medium text-neutral-700 mb-2">No folders yet</h3>
-                <p className="text-neutral-500">Create your first folder to start organizing your certificates</p>
               </div>
-            )}
+            </motion.div>
+
+            {/* Main Content Area */}
+            <div className="flex-1">
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {filteredCertificates.length > 0 ? (
+                    filteredCertificates.map((certificate) => (
+                      <motion.div
+                        key={certificate._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-white rounded-lg shadow-card p-6 hover:shadow-hover transition-shadow"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex items-center mb-3">
+                              <div className="p-2 bg-primary-100 text-primary-600 rounded-lg mr-3">
+                                <FiFolder className="w-6 h-6" />
+                              </div>
+                              <h3 className="text-lg font-semibold text-neutral-800 line-clamp-1">
+                                {certificate.Title}
+                              </h3>
+                            </div>
+                            <p className="text-sm text-neutral-500 mb-2">Category: {certificate.Tag}</p>
+                            <p className="text-sm text-neutral-500">Uploaded on {new Date(certificate.Date).toLocaleDateString()}</p>
+                          </div>
+                          
+                          <div className="flex space-x-2 ml-4">
+                            <button 
+                              onClick={() => {
+                                const byteCharacters = atob(certificate.Data);
+                                const byteNumbers = new Array(byteCharacters.length);
+                                for (let i = 0; i < byteCharacters.length; i++) {
+                                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                }
+                                const byteArray = new Uint8Array(byteNumbers);
+                                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                                const url = URL.createObjectURL(blob);
+                                window.open(url, '_blank');
+                              }}
+                              className="p-2 hover:bg-primary-50 hover:text-primary-600 rounded-full"
+                            >
+                              View
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-12">
+                      <div className="bg-neutral-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <FiFolder className="w-8 h-8 text-neutral-400" />
+                      </div>
+                      <h3 className="text-xl font-medium text-neutral-700 mb-2">No Certificates Found</h3>
+                      <p className="text-neutral-500">
+                        {selectedCategory 
+                          ? `No certificates found in the ${selectedCategory} category`
+                          : 'Upload your first certificate to get started'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>

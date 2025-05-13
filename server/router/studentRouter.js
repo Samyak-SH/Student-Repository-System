@@ -7,11 +7,12 @@ const {uploadCertificate, getStudentCertificate} = require("../controller/certif
 
 const {verifyToken} = require("../middleware/verifyToken");
 
+
 //middleware
 studentRouter.use(verifyToken);
 
 studentRouter.get("/getStudent", getStudent);
-studentRouter.get("/certificate", getStudentCertificate);
+studentRouter.get("/certificates", verifyToken, getStudentCertificate);
 studentRouter.post("/updateStudent", updateStudent);
 studentRouter.post("/uploadCertificate", uploadCertificate);
 

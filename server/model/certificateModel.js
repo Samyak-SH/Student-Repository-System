@@ -5,7 +5,7 @@ const certificateSchema = mongoose.Schema({
     TID : {type:String, required:true},
     Data : {type:String, requried: true},
     Date : {type:Date, default : Date.now},
-    Department : {type:String, required : true},
+    Department : {type:String, default:'Unknown'},
     Title : {type:String, required:true},
     Tag : {type:String, required:true},
     Path : {type:String, required:true},
