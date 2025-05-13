@@ -4,6 +4,9 @@ import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiX, FiUpload } from 'react-icons/fi'
+import axios from 'axios'
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
 const CreateFolderModal = ({ onClose, onSubmit }) => {
   const [title, setTitle] = useState('')
@@ -50,6 +53,81 @@ const CreateFolderModal = ({ onClose, onSubmit }) => {
   )
 }
 
+const UploadCertificateModal = ({ onClose, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    tag: 'course',
+    file: null,
+  })
+
+  const tags = ['course', 'workshop', 'internship', 'hackathon', 'skill', 'NSS', 'sports']
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    onSubmit(formData)
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="bg-white rounded-lg shadow-lg max-w-md w-full p-6"
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-neutral-800">Upload Certificate</h2>
+          <button onClick={onClose} className="text-neutral-500 hover:text-neutral-700">
+            <FiX className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Title</label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Tag</label>
+            <select
+              value={formData.tag}
+              onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+              className="input-field"
+            >
+              {tags.map((tag) => (
+                <option key={tag} value={tag}>{tag}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Upload PDF</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => setFormData({ ...formData, file: e.target.files[0] })}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div className="flex justify-end space-x-3">
+            <button type="button" onClick={onClose} className="btn-outline">Cancel</button>
+            <button type="submit" className="btn-primary">Upload</button>
+          </div>
+        </form>
+      </motion.div>
+    </div>
+  )
+}
+
 const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -83,6 +161,7 @@ const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
 
 const StudentHome = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showUploadModal, setShowUploadModal] = useState(false)
   const [folders, setFolders] = useState([])
   const [currentPath, setCurrentPath] = useState([])
 
@@ -99,6 +178,36 @@ const StudentHome = () => {
     }
     setFolders([newFolder, ...folders])
     setShowCreateModal(false)
+  }
+
+  const handleUploadCertificate = async ({ title, tag, file }) => {
+    const reader = new FileReader()
+    reader.onloadend = async () => {
+      const base64Data = reader.result.split(',')[1]
+
+      const payload = {
+        title,
+        tag,
+        usn: 'student123',
+        tid: 'teacher456',
+        date: new Date().toISOString().split('T')[0],
+        path: `/${currentPath.join('/')}`,
+        Data: base64Data
+      }
+
+      try {
+        await axios.post(`${SERVER_URL}/student/uploadCertificate`, payload)
+        alert('Certificate uploaded successfully!')
+        setShowUploadModal(false)
+      } catch (error) {
+        console.error('Upload failed:', error)
+        alert('Failed to upload certificate.')
+      }
+    }
+
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
 
   const handleEditFolder = (folder) => {
@@ -140,7 +249,7 @@ const StudentHome = () => {
             </div>
 
             <div className="flex gap-3">
-              <button className="btn-outline">
+              <button onClick={() => setShowUploadModal(true)} className="btn-outline">
                 <FiUpload className="mr-2" /> Upload Certificate
               </button>
               <button onClick={() => setShowCreateModal(true)} className="btn-primary">
@@ -186,6 +295,12 @@ const StudentHome = () => {
           <CreateFolderModal
             onClose={() => setShowCreateModal(false)}
             onSubmit={handleCreateFolder}
+          />
+        )}
+        {showUploadModal && (
+          <UploadCertificateModal
+            onClose={() => setShowUploadModal(false)}
+            onSubmit={handleUploadCertificate}
           />
         )}
       </AnimatePresence>

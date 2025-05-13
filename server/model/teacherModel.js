@@ -1,4 +1,7 @@
 const mongoose = require("mongoose")
+const jwt = require('jsonwebtoken');
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const teacherSchema = mongoose.Schema({
     TID: { type: String, required: true , unique : true},
@@ -10,28 +13,30 @@ const teacherSchema = mongoose.Schema({
 
 const teacherModel = mongoose.model("teachers", teacherSchema);
 
-const getTeacher = async (tid, cb)=>{
-    try{
-        const result = await teacherModel.findOne( { TID : tid } );
-        if(result){
-            const {TID, firstName, lastName, email} = result;
-            const teacher = {
-                TID : TID,
-                firstName : firstName,
-                lastName : lastName,
-                email : email,
+const getTeacher = async (incoming_email, incoming_pass, cb) => {
+    console.log("secret key", SECRET_KEY)
+    try {
+        const result = await teacherModel.findOne({ email: incoming_email });
+        if (result) {
+            const { TID, firstName, lastName, email, password } = result;
+
+            if (password !== incoming_pass) {
+                return cb(null, { message: "wrong password" });
             }
-            cb(teacher, null);
-        }
-        else{
-            cb(null, null)
+
+            const payload = { TID, firstName, lastName, email };
+            const token = jwt.sign(payload, SECRET_KEY);
+
+            return cb(null, { message: "success", token });
+        } else {
+            return cb(null, { message: "user not found" });
         }
 
-        
-    }catch(err){
-        cb(null, err);
+    } catch (err) {
+        return cb(err, null);
     }
-}
+};
+
 
 const createTeacher = async (teacher, cb)=>{
     try{

@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FiMail, FiLock } from 'react-icons/fi'
 import { motion } from 'framer-motion'
+import axios from 'axios'
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const TeacherLogin = () => {
   const navigate = useNavigate()
@@ -12,23 +15,6 @@ const TeacherLogin = () => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-
-  // Replace it with backend call later
-  const loginTeacher = async ({ email, password }) => {
-
-    console.log('Logging in with:', { email, password })
-    
-
-     // For now simulate successfull login
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true, userType: 'teacher' })
-      }, 1000)
-    })
-
-    
   }
 
   const handleSubmit = async (e) => {
@@ -43,17 +29,20 @@ const TeacherLogin = () => {
     setLoading(true)
 
     try {
-      const response = await loginTeacher(formData)
-
-      if (response.success) {
-        sessionStorage.setItem('userType', response.userType)
-        navigate('/teacher/home')
-      } else {
-        setError('Invalid email or password')
+      const response = await axios.post(`${SERVER_URL}/teacher/login`, formData);
+      if(response.status==200){
+        const token = response.headers['x-auth-token'];
+        localStorage.setItem('jwt_token', token);
+        navigate('/teacher/home');
       }
     } catch (err) {
-      console.error(err)
-      setError('Login failed. Please try again.')
+      if (err.response?.status === 401) {
+        setError("Wrong credentials");
+      } else if (err.response?.status === 404) {
+        setError("User doesn't exist");
+      } else {
+        setError("Login failed. Please try again.");
+      }
     } finally {
       setLoading(false)
     }

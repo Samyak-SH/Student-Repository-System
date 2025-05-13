@@ -1,20 +1,25 @@
 const teacherModel = require("../model/teacherModel");
 
-const getTeacher = (req,res)=>{
-    //actual code const {TID} = req.user because we storing decoded details in req.user after jwt verfication/
-    const {TID} = req.body; // fetching from request body for testing 
-    console.log("TID : ",TID);
-    teacherModel.getTeacher(TID, (result, err)=>{
-        if(err){
-            console.error("Failed to fetch teacher\n", err);
-            return res.status(500).send({message:"Failed to fetch teacher", error: err.message})
+const getTeacher = (req, res) => {
+    const { email, password } = req.body;
+
+    teacherModel.getTeacher(email, password, (err, result) => {
+        if (err) {
+            console.error("Error while fetching teacher", err);
+            return res.status(500).send({ message: "Server error", error: err.message });
         }
-        if(!result){
-            return res.status(404).send({message : "teacher not found"});
+
+        if (result.message === "wrong password") {
+            return res.status(401).send({ message: "Unauthorized: wrong password" });
         }
-        res.status(200).send(result);
-    })
-}
+
+        if (result.message === "user not found") {
+            return res.status(404).send({ message: "User not found" });
+        }
+        return res.status(200).header("x-auth-token", result.token).send({ message: "success" });
+    });
+};
+
 
 const createTeacher = (req,res)=>{
     //todo hash password

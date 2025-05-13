@@ -6,7 +6,7 @@ const cors = require("cors");
 
 //controller imports
 const {createStudent} = require("./controller/studentController")
-const {createTeacher} = require("./controller/teacherController")
+const {createTeacher, getTeacher} = require("./controller/teacherController")
 
 //router imports
 const {studentRouter} = require("./router/studentRouter");
@@ -20,9 +20,11 @@ const MONGODBURL = process.env.MONGODBURL;
 const app = express();
 
 //middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({extended : true}));
+app.use(cors({
+  exposedHeaders: ['x-auth-token'], 
+}));
+app.use(express.json({limit : '10mb'}));
+app.use(express.urlencoded({extended : true, limit : '10mb'}));
 
 //routings
 app.use("/student", studentRouter);
@@ -31,6 +33,7 @@ app.use("/teacher", teacherRouter);
 app.get("/test", (req,res)=>{res.send("server running")});
 
 //todo
+app.post("/teacher/login", getTeacher)
 // app.get("/singin")
 // app.get("/signup")
 

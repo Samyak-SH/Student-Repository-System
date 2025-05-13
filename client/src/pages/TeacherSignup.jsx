@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiBookmark } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import axios from 'axios'
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const TeacherSignup = () => {
   const navigate = useNavigate();
@@ -11,7 +14,7 @@ const TeacherSignup = () => {
     lastName: '',
     email: '',
     password: '',
-    teacherId: '',
+    TID: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -22,13 +25,13 @@ const TeacherSignup = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    const { firstName, lastName, email, password, teacherId } = formData;
+    const { firstName, lastName, email, password, TID } = formData;
 
-    if (!firstName || !lastName || !email || !password || !teacherId) {
+    if (!firstName || !lastName || !email || !password || !TID) {
       setError('All fields are required');
       return;
     }
@@ -39,13 +42,16 @@ const TeacherSignup = () => {
     }
 
     setLoading(true);
-    // Simulate an API call through backend
-    setTimeout(() => {
-      setLoading(false);
+    const response = await axios.post(`${SERVER_URL}/createTeacher`, formData);
 
-      // For now simply  navigate to teacher's home page after successful signup
-      navigate('/teacher/home');
-    }, 2000);
+    if(response.data.message == "Success"){
+      setLoading(false);
+      navigate('/teacher/login');
+    }
+    else{
+      setLoading(false);
+      alert("Error creating account\n" + response.data.message)
+    }
   };
 
   return (
@@ -130,7 +136,7 @@ const TeacherSignup = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="teacherId" className="block text-sm font-medium text-neutral-700 mb-1">
+              <label htmlFor="TID" className="block text-sm font-medium text-neutral-700 mb-1">
                 Teacher ID
               </label>
               <div className="relative">
@@ -139,9 +145,9 @@ const TeacherSignup = () => {
                 </div>
                 <input
                   type="text"
-                  id="teacherId"
-                  name="teacherId"
-                  value={formData.teacherId}
+                  id="TID"
+                  name="TID"
+                  value={formData.TID}
                   onChange={handleChange}
                   className="input-field pl-10"
                   placeholder="Teacher ID"

@@ -188,7 +188,7 @@ const LandingPage = () => {
   to="/teacher/login"
   className="border border-blue-600 text-blue-600 py-3 px-8 text-lg rounded-md transition duration-300 ease-in-out hover:bg-blue-600 hover:text-white hover:scale-105"
 >
-  Signup as Teacher
+  Login as Teacher
 </Link>
 
 <Link 

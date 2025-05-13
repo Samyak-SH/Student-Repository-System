@@ -1,9 +1,10 @@
 const certificateModel = require("../model/certificateModel");
 
 const uploadCertificate = (req,res)=>{
+    console.log("BOdy", req.body);
 
     const certificate = {
-        data : "oiajsodhfoasodjfioiqo12390812h3",
+        Data : req.body.Data,
         TID : req.body.TID,
         USN : req.body.USN,
         Title : req.body.Title,
