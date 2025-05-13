@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FiPlus, FiHelpCircle, FiDownload } from 'react-icons/fi'
-
+import axios from 'axios'
 
 
 import Navbar from '../components/common/Navbar'
@@ -11,7 +11,7 @@ import FilterSection from '../components/teacher/FilterSection'
 import FolderGrid from '../components/teacher/FolderGrid'
 import StudentCredentialForm from '../components/teacher/StudentCredentialForm'
 
-
+const SERVER_URL =  import.meta.env.VITE_SERVER_URL;
 
 
 const TeacherHome = () => {
@@ -54,9 +54,39 @@ const TeacherHome = () => {
   }
 
   useEffect(() => {
+    const getStudents = async()=>{
+      const token = localStorage.getItem("jwt_token_teacher");
+      try{
+        const result = await axios.get(`${SERVER_URL}/teacher/getAllStudents`, {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        })
+        console.log(result.data);
+      }catch(err){
+        console.error(err);
+      }
+    }
+
+    getStudents();
     fetchFolders()
   }, [])
 
+
+  // use this fucntion whenever teacher clicks on a specific student and add the student's usn in the api call to get all their certificates
+  // const getStudentCertificate = async()=>{
+  //   const token = localStorage.getItem("jwt_token_teacher");
+  //   try{
+  //     const result = await axios.get(`${SERVER_URL}/teacher/getStudentCertificate?USN=${'replace with usn'}`, {
+  //     headers : {
+  //       Authorization : `Bearer ${token}`
+  //     }
+  //     })
+  //     console.log(result);
+  //   }catch(err){
+  //     console.error(err);
+  //   }
+  // }
 
 
 

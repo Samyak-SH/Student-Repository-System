@@ -9,7 +9,8 @@ const studentSchema = mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true , unique : true},
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    department : {type: String, required : true}
 })
 
 const studentModel = mongoose.model("students", studentSchema);
@@ -18,13 +19,13 @@ const getStudent = async (incoming_email, incoming_pass, cb) => {
     try {
         const result = await studentModel.findOne({ email: incoming_email });
         if (result) {
-            const { USN, TID, firstName, lastName, email, password } = result;
+            const { USN, TID, firstName, lastName, email, password, department } = result;
 
             if (password !== incoming_pass) {
                 return cb(null, { message: "wrong password" });
             }
 
-            const payload = { USN,  TID, firstName, lastName, email };
+            const payload = { USN,  TID, firstName, lastName, email, department };
             const token = jwt.sign(payload, SECRET_KEY);
 
             return cb(null, { message: "success", token });
@@ -70,4 +71,16 @@ const updateStudent = async (student, cb)=>{
     }
 }
 
-module.exports = {getStudent, createStudent, updateStudent}
+const getAllStudents = async (TID, cb)=>{
+    try{
+        const result = await studentModel.find({TID : TID});
+        console.log("search results", result);
+        cb(result, null);
+    }
+    catch(err){
+        console.error(err);
+        cb(null, err);
+    }
+}
+
+module.exports = {getStudent, createStudent, updateStudent, getAllStudents}

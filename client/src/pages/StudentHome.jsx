@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -158,6 +157,24 @@ const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
     </div>
   </motion.div>
 )
+const getCertificiates = async () => {
+  console.log("called");
+  try {
+    const token = localStorage.getItem("jwt_token_student");
+
+    const result = await axios.get(`${SERVER_URL}/student/certificate`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    if(result.data.length > 0){
+      
+    }
+    console.log(result.data.length);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const StudentHome = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -166,7 +183,7 @@ const StudentHome = () => {
   const [currentPath, setCurrentPath] = useState([])
 
   useEffect(() => {
-    // Fetch folders from backend (optional)
+    getCertificiates();
   }, [])
 
   const handleCreateFolder = (folderData) => {

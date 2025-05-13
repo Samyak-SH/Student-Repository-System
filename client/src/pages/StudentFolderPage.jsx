@@ -15,7 +15,7 @@ const UploadCertificateModal = ({ onClose, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData)               // data will be  sent to backend later
+    onSubmit(formData)
   }
 
   const handleFileChange = (e) => {

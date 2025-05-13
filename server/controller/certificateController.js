@@ -6,10 +6,11 @@ const uploadCertificate = (req,res)=>{
         Data : req.body.Data,
         TID : req.user.TID,
         USN : req.user.USN,
+        Department : req.user.department,
         Title : req.body.title,
         Tag : req.body.tag,
         Path : req.body.path,
-        Date : req.body.date
+        Date : req.body.date,        
     }
     console.log(certificate);
     certificateModel.uploadCertificate(certificate, (result)=>{
@@ -21,4 +22,32 @@ const uploadCertificate = (req,res)=>{
     })
 }
 
-module.exports = {uploadCertificate};
+const getStudentCertificate = (req,res)=>{
+    console.log(req.user.USN);
+    certificateModel.getStudentCertificate(req.user.USN, (result, err)=>{
+        if(err){
+            return res.status(500).send({message : "internal server error"});
+        }
+        if(result.length == 0){
+            return res.status(200).send({message : "no certificates"});
+        }
+        return res.status(200).send(result);
+    })
+
+}
+
+const getStudentCertificateByTeacher = (req,res)=>{
+    console.log(req.parans.USN);
+    certificateModel.getStudentCertificate(req.params.USN, (result, err)=>{
+        if(err){
+            return res.status(500).send({message : "internal server error"});
+        }
+        if(result.length == 0){
+            return res.status(200).send({message : "no certificates"});
+        }
+        return res.status(200).send(result);
+    })
+
+}
+
+module.exports = {uploadCertificate, getStudentCertificate, getStudentCertificateByTeacher};

@@ -3,7 +3,7 @@ const studentRouter = express.Router();
 
 //controller imports
 const {getStudent, updateStudent} = require("../controller/studentController")
-const {uploadCertificate} = require("../controller/certificateController");
+const {uploadCertificate, getStudentCertificate} = require("../controller/certificateController");
 
 const {verifyToken} = require("../middleware/verifyToken");
 
@@ -11,6 +11,7 @@ const {verifyToken} = require("../middleware/verifyToken");
 studentRouter.use(verifyToken);
 
 studentRouter.get("/getStudent", getStudent);
+studentRouter.get("/certificate", getStudentCertificate);
 studentRouter.post("/updateStudent", updateStudent);
 studentRouter.post("/uploadCertificate", uploadCertificate);
 

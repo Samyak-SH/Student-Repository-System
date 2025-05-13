@@ -2,7 +2,8 @@ const express = require("express");
 const teacherRouter = express.Router();
 
 //controller imports
-const {createStudent} = require("../controller/studentController");
+const {createStudent, getAllStudents} = require("../controller/studentController");
+const {getStudentCertificateByTeacher} = require("../controller/certificateController");
 
 const {verifyToken} = require("../middleware/verifyToken");
 
@@ -10,6 +11,8 @@ const {verifyToken} = require("../middleware/verifyToken");
 teacherRouter.use(verifyToken);
 
 teacherRouter.post("/createStudent", createStudent);
+teacherRouter.get("/getAllStudents", getAllStudents);
+teacherRouter.get("/getStudentCertificate", getStudentCertificateByTeacher);
 
 
 // teacherRouter.get("/teacherCertificate") //to get all certificate of students under this teacher

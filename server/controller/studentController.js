@@ -28,9 +28,9 @@ const createStudent = (req,res)=>{
         firstName : req.body.firstName,
         lastName : req.body.lastName,
         email : req.body.email,
-        password : req.body.password
+        password : req.body.password,
+        department : req.body.department
     }
-    //todo create JWT and return to user
     studentModel.createStudent(student, (result)=>{
         if(result.error){
             console.error(result.message, result.error.message);
@@ -38,6 +38,22 @@ const createStudent = (req,res)=>{
         }
         res.status(200).send({message : result.message});
     })
+}
+
+const getAllStudents = (req,res)=>{
+    const {TID} = req.user;
+    console.log("getting student with tid", TID);
+    
+    studentModel.getAllStudents(TID, (result, err)=>{
+        if(err){
+            return res.status(500).send({message : "failed to get students"});
+        }
+        if(result.length==0){
+            return res.status(404).send({message : "no students found"});
+        }
+        return res.status(200).send(result);
+    })
+
 }
 
 const updateStudent = (req,res)=>{
@@ -60,4 +76,4 @@ const updateStudent = (req,res)=>{
     })
 }
 
-module.exports = {getStudent, createStudent, updateStudent}
+module.exports = {getStudent, createStudent, updateStudent, getAllStudents}
