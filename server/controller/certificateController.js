@@ -1,21 +1,23 @@
 const certificateModel = require("../model/certificateModel");
 
 const uploadCertificate = (req,res)=>{
-    console.log("BOdy", req.body);
 
     const certificate = {
         Data : req.body.Data,
-        TID : req.body.TID,
-        USN : req.body.USN,
-        Title : req.body.Title,
-        Tag : req.body.Tag,
+        TID : req.user.TID,
+        USN : req.user.USN,
+        Title : req.body.title,
+        Tag : req.body.tag,
+        Path : req.body.path,
+        Date : req.body.date
     }
+    console.log(certificate);
     certificateModel.uploadCertificate(certificate, (result)=>{
         if(result.error){
-            res.status(500).send({message : "failed", error: result.error});
-            return;
+            return res.status(500).send({message : "failed", error: result.error});
+            
         }
-        res.status(200).send({message : "success"});
+        return res.status(200).send({message : "success"});
     })
 }
 

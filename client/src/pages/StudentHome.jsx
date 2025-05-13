@@ -188,15 +188,18 @@ const StudentHome = () => {
       const payload = {
         title,
         tag,
-        usn: 'student123',
-        tid: 'teacher456',
         date: new Date().toISOString().split('T')[0],
         path: `/${currentPath.join('/')}`,
         Data: base64Data
       }
 
       try {
-        await axios.post(`${SERVER_URL}/student/uploadCertificate`, payload)
+        const token = localStorage.getItem("jwt_token_student");
+        await axios.post(`${SERVER_URL}/student/uploadCertificate`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         alert('Certificate uploaded successfully!')
         setShowUploadModal(false)
       } catch (error) {

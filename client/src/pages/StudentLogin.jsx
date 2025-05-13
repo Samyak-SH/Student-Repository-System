@@ -16,7 +16,7 @@ const StudentLogin = () => {
     try{
       const response = await axios.post(`${SERVER_URL}/verify`, {token : token});
       if(response.status == 200){
-      navigate('/teacher/home');
+      navigate('/student/home');
       }
 
     }

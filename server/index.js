@@ -39,10 +39,8 @@ app.post("/verify", verifyTokenLogin);
 //todo
 app.post("/teacherLogin", getTeacher)
 app.post("/studentLogin", getStudent)
-// app.get("/singin")
-// app.get("/signup")
 
-// app.post("/editCertificate") //only student side
+
 app.post("/createTeacher", createTeacher)
 
 const startServer = async ()=>{

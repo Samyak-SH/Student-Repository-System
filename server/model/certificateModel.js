@@ -14,8 +14,8 @@ const certificateModel = mongoose.model("certificates", certificateSchema);
 
 const uploadCertificate = async (certificate, cb)=>{
     try{
-        console.log("uploading certificate");
-        cb({message : "success"});
+        const result = await certificateModel.insertOne(certificate);
+        cb({error : null});
     }
     catch(err){
         console.error(err);
