@@ -1,30 +1,69 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
+import axios from 'axios'
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const StudentLogin = () => {
-  const [studentId, setStudentId] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = (e) => {
-    e.preventDefault()
+  const verifyToken = async (token)=>{
+    try{
+      const response = await axios.post(`${SERVER_URL}/verify`, {token : token});
+      if(response.status == 200){
+      navigate('/teacher/home');
+      }
 
-    // For now  passing dummy value true for login
-    const login = true
-
-    if (login) {
-
-      // Store user  in sessionStorage  to mark that user login as student 
-      sessionStorage.setItem('userType', 'student') 
-
-
-      
-      navigate('/student/home')
-    } else {
-      setError('Invalid credentials or account not created by teacher')
     }
+    catch(err){
+      if(err.response.status == 401){
+      alert("session expired please login again");
+      }
+    }
+  }
+  useEffect(() => {
+    const token = localStorage.getItem('jwt_token_student');
+    if (token) {
+      verifyToken(token);
+    }
+  }, [])
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setError('')
+
+    if (!email || !password) {
+      setError('All fields are required')
+      return
+    }
+    const formData = {
+      email : email,
+      password : password
+    }
+    try {
+      console.log("sending req");
+      const response = await axios.post(`${SERVER_URL}/studentLogin`, formData);
+      if (response.status == 200) {
+        const token = response.headers['x-auth-token'];
+        localStorage.setItem('jwt_token_student', token);
+        navigate('/student/home');
+      }
+    } catch (err) {
+      console.error(err);
+      if (err.response?.status === 401) {
+        setError("Wrong credentials");
+      } else if (err.response?.status === 404) {
+        setError("User doesn't exist");
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    }
+
   }
 
   return (
@@ -62,16 +101,16 @@ const StudentLogin = () => {
 
           <div>
             <label
-              htmlFor="studentId"
+              htmlFor="email"
               className="block mb-1 text-sm font-medium text-gray-700"
             >
-              Student ID
+              Email
             </label>
             <input
               type="text"
               id="studentId"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-400"
             />

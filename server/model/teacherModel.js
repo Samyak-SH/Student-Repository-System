@@ -14,7 +14,6 @@ const teacherSchema = mongoose.Schema({
 const teacherModel = mongoose.model("teachers", teacherSchema);
 
 const getTeacher = async (incoming_email, incoming_pass, cb) => {
-    console.log("secret key", SECRET_KEY)
     try {
         const result = await teacherModel.findOne({ email: incoming_email });
         if (result) {

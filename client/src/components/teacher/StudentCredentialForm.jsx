@@ -2,8 +2,12 @@ import { useState } from 'react'
 import { FiUser, FiMail, FiLock, FiBookmark, FiX } from 'react-icons/fi'
 import { departments } from '../../utils/mockData'       // for now fetching department from MockData file later on it is replace by real API call
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const StudentCredentialForm = ({ onClose, onSuccess }) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -40,16 +44,20 @@ const StudentCredentialForm = ({ onClose, onSuccess }) => {
 
 
     try {
-      // Replace it Api call from Backend
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          console.log('Mock student credential submitted:', formData)
-          resolve()
-        }, 1000)
-      })
-      onSuccess()
+      console.log(formData);
+      const token = localStorage.getItem("jwt_token_teacher");
+
+      const response = await axios.post(`${SERVER_URL}/teacher/createStudent`,formData,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      console.log(response.status);
     } catch (err) {
-      setError(err.message || 'Failed to create student account')
+      if(err.response.status==400 || err.response.status == 401){
+        navigate('/teacher/login');
+      };
     } finally {
       setLoading(false)
     }

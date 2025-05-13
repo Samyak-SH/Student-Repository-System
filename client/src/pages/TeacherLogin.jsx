@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FiMail, FiLock } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import { useEffect } from 'react'
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -11,6 +12,28 @@ const TeacherLogin = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+ const verifyToken = async (token)=>{
+    try{
+      const response = await axios.post(`${SERVER_URL}/verify`, {token : token});
+      if(response.status == 200){
+      navigate('/teacher/home');
+      }
+
+    }
+    catch(err){
+      if(err.response.status == 401){
+      alert("session expired please login again");
+      }
+    }
+  }
+  useEffect(() => {
+    const token = localStorage.getItem('jwt_token_teacher');
+    console.log(token);
+    if (token) {
+      verifyToken(token);
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -29,10 +52,10 @@ const TeacherLogin = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post(`${SERVER_URL}/teacher/login`, formData);
-      if(response.status==200){
+      const response = await axios.post(`${SERVER_URL}/teacherLogin`, formData);
+      if (response.status == 200) {
         const token = response.headers['x-auth-token'];
-        localStorage.setItem('jwt_token', token);
+        localStorage.setItem('jwt_token_teacher', token);
         navigate('/teacher/home');
       }
     } catch (err) {

@@ -10,16 +10,16 @@ const FolderGrid = ({ selectedCategory }) => {
 
   // Fetch folders when connected with api call later 
   const fetchFolders = async () => {
-    try {
-      const response = await fetch('/api/folders');
-      if (!response.ok) throw new Error('Failed to fetch folders');
-      const data = await response.json();
-      setFolders(data);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   const response = await fetch('/api/folders');
+    //   if (!response.ok) throw new Error('Failed to fetch folders');
+    //   const data = await response.json();
+    //   setFolders(data);
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   useEffect(() => {

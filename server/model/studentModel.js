@@ -1,4 +1,7 @@
 const mongoose = require("mongoose")
+const jwt = require('jsonwebtoken');
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const studentSchema = mongoose.Schema({
     USN: { type: String, required: true , unique:true},
@@ -11,29 +14,29 @@ const studentSchema = mongoose.Schema({
 
 const studentModel = mongoose.model("students", studentSchema);
 
-const getStudent = async (usn, cb)=>{
-    try{
-        const result = await studentModel.findOne( { USN : usn } );
-        if(result){
-            const {USN, TID, firstName, lastName, email} = result;
-            const student = {
-                USN : USN,
-                TID : TID,
-                firstName : firstName,
-                lastName : lastName,
-                email : email,
+const getStudent = async (incoming_email, incoming_pass, cb) => {
+    try {
+        const result = await studentModel.findOne({ email: incoming_email });
+        if (result) {
+            const { USN, TID, firstName, lastName, email, password } = result;
+
+            if (password !== incoming_pass) {
+                return cb(null, { message: "wrong password" });
             }
-            cb(student, null);
-        }
-        else{
-            cb(null, null);//no result no error            
+
+            const payload = { USN,  TID, firstName, lastName, email };
+            const token = jwt.sign(payload, SECRET_KEY);
+
+            return cb(null, { message: "success", token });
+        } else {
+            return cb(null, { message: "user not found" });
         }
 
-        
-    }catch(err){
-        cb(null, err);
+    } catch (err) {
+        return cb(err, null);
     }
-}
+};
+
 
 const createStudent = async (student, cb)=>{
     try{

@@ -5,12 +5,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 //controller imports
-const {createStudent} = require("./controller/studentController")
+const {createStudent, getStudent} = require("./controller/studentController")
 const {createTeacher, getTeacher} = require("./controller/teacherController")
 
 //router imports
 const {studentRouter} = require("./router/studentRouter");
 const {teacherRouter} = require("./router/teacherRouter")
+
+//middleware imports
+const {verifyTokenLogin} = require("./middleware/verifyToken");
 
 //env imports
 const PORT = process.env.PORT;
@@ -31,14 +34,15 @@ app.use("/student", studentRouter);
 app.use("/teacher", teacherRouter);
 
 app.get("/test", (req,res)=>{res.send("server running")});
+app.post("/verify", verifyTokenLogin);
 
 //todo
-app.post("/teacher/login", getTeacher)
+app.post("/teacherLogin", getTeacher)
+app.post("/studentLogin", getStudent)
 // app.get("/singin")
 // app.get("/signup")
 
 // app.post("/editCertificate") //only student side
-app.post("/createStudent", createStudent) //does not require jwt verification
 app.post("/createTeacher", createTeacher)
 
 const startServer = async ()=>{

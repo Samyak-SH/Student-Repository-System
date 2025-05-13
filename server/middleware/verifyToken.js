@@ -1,13 +1,32 @@
-const SECRETKEY = process.env.SECRETKEY
+const SECRET_KEY = process.env.SECRET_KEY
+const jwt = require("jsonwebtoken")
 
-const verifyToken = (req,res,next)=>{
-    //verify jwt token for 3 cases
-    //1) valid token
-    //2) invalid token (wrong token)
-    //3) no token
-    //store decoded value in req.user like req.user = decoded from callback of jwt.verify()
-    console.log("hit middleware");
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).send({ message: "Access denied. No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded;
+    console.log(req.user);
     next();
+  } catch (err) {
+    return res.status(400).send({ message: "Invalid token" });
+  }
+};
+
+
+const verifyTokenLogin = (req,res)=>{
+    const {token} = req.body;
+    try{
+        jwt.verify(token, SECRET_KEY);
+        return res.status(200).send({message : "logged in"});
+    }catch(err){
+       return  res.status(401).send({message : "please login"});
+    }
 }
 
-module.exports = {verifyToken}
+module.exports = {verifyToken, verifyTokenLogin} 

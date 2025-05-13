@@ -16,38 +16,38 @@ import StudentCredentialForm from '../components/teacher/StudentCredentialForm'
 
 const TeacherHome = () => {
   const [folders, setFolders] = useState([])
-     const [filteredFolders, setFilteredFolders] = useState([])
- const [searchQuery, setSearchQuery] = useState('')
+  const [filteredFolders, setFilteredFolders] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState({ category: '', department: '' })
-    const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [showCredentialForm, setShowCredentialForm] = useState(false)
 
 
-   //Fetch all folder later when connected to backend 
+  //Fetch all folder later when connected to backend 
   const fetchFolders = async () => {
     setIsLoading(true)
-    try {
-      const response = await fetch('/api/folders') 
-      const data = await response.json()
-      
-      setFolders(data)
-      setFilteredFolders(data)
-    } 
-    catch (error) {
-      console.error('Error fetching folders:', error)
-    } 
-    finally {
-      setIsLoading(false)
-    }
+    // try {
+    //   // const response = await fetch('/api/folders')
+    //   // const data = await response.json()
+
+    //   setFolders(data)
+    //   setFilteredFolders(data)
+    // }
+    // catch (error) {
+    //   console.error('Error fetching folders:', error)
+    // }
+    // finally {
+    //   setIsLoading(false)
+    // }
   }
 
 
   //call real api from backend to get certificates for all folders
   const fetchCertificatesForFolder = async (folderId) => {
     try {
-      const response = await fetch(`/api/folders/${folderId}/certificates`) 
+      const response = await fetch(`/api/folders/${folderId}/certificates`)
       const data = await response.json()
-    
+
     } catch (error) {
       console.error('Error fetching certificates:', error)
     }
@@ -68,7 +68,7 @@ const TeacherHome = () => {
       const query = searchQuery.toLowerCase()
       results = results.filter(folder =>
         folder.studentName.toLowerCase().includes(query) ||
-            folder.name.toLowerCase().includes(query)
+        folder.name.toLowerCase().includes(query)
       )
     }
 
@@ -181,7 +181,7 @@ const TeacherHome = () => {
 
       <Footer />
 
-            {showCredentialForm && (
+      {showCredentialForm && (
         <StudentCredentialForm
           onClose={() => setShowCredentialForm(false)}
           onSuccess={handleCreateStudentSuccess}
