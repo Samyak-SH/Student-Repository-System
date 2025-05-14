@@ -187,7 +187,6 @@ const StudentHome = () => {
     
     console.log("API Response:", response.data); // Debug log
     
-    // Check both possible response structures
     if (response.data.certificates) {
       setCertificates(response.data.certificates);
     } else if (Array.isArray(response.data)) {
@@ -243,7 +242,7 @@ const StudentHome = () => {
         })
         alert('Certificate uploaded successfully!')
         setShowUploadModal(false)
-        // Fetch updated certificates after successful upload
+       
         fetchCertificates();
       } catch (error) {
         console.error('Upload failed:', error)
@@ -286,7 +285,7 @@ const StudentHome = () => {
     setSearchQuery(query);
   };
 
-  // Filter certificates based on both search query and selected category
+  //filtering
   const filteredCertificates = certificates.filter(cert => {
     const matchesCategory = selectedCategory ? cert.Tag === selectedCategory : true;
     const matchesSearch = searchQuery

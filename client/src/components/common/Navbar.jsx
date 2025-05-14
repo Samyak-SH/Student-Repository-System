@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FiUser, FiLogOut, FiMenu, FiX } from 'react-icons/fi'
@@ -6,28 +6,43 @@ import { FiUser, FiLogOut, FiMenu, FiX } from 'react-icons/fi'
 const Navbar = () => {
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [userType, setUserType] = useState(null)
 
-  const getUserType = () => {
-    return sessionStorage.getItem('userType')   // check student or teacher 
-  }
-
-
+  useEffect(() => {
+    // Check for both teacher and student tokens
+    const teacherToken = localStorage.getItem('jwt_token_teacher')
+    const studentToken = localStorage.getItem('jwt_token_student')
+    
+    if (teacherToken) {
+      setUserType('teacher')
+    } else if (studentToken) {
+      setUserType('student')
+    }
+  }, [])
 
   const handleLogout = async () => {
     try {
 
-      // later call Backend logout 
-      sessionStorage.clear() 
+      // Clear all tokens and storage
+      localStorage.removeItem('jwt_token_teacher')
+      localStorage.removeItem('jwt_token_student')
+      sessionStorage.clear()
+      
+      
       navigate('/')
+      
+      
     } catch (err) {
       console.error('Logout failed:', err)
+
+      localStorage.removeItem('jwt_token_teacher')
+      localStorage.removeItem('jwt_token_student')
+      sessionStorage.clear()
+      navigate('/')
     }
   }
 
-
-  //Profile Handle for both teacher and student 
   const handleProfileClick = () => {
-    const userType = getUserType()
     if (userType === 'teacher') {
       navigate('/teacher-profile')
     } else if (userType === 'student') {
@@ -35,6 +50,15 @@ const Navbar = () => {
     } else {
       console.error('User type not found')
     }
+  }
+
+  const getHomeLink = () => {
+    if (userType === 'teacher') {
+      return '/teacher/home'
+    } else if (userType === 'student') {
+      return '/student/home'
+    }
+    return '/'
   }
 
   const navbarVariants = {
@@ -56,7 +80,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/home" className="flex items-center space-x-2">
+          <Link to={getHomeLink()} className="flex items-center space-x-2">
             <div className="rounded-full bg-primary-500 text-white p-2">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -64,7 +88,6 @@ const Navbar = () => {
             </div>
             <span className="text-xl font-semibold text-primary-800">CertifyHub</span>
           </Link>
-
 
           {/* Profile Menu */}
           <div className="hidden md:flex items-center space-x-6">
@@ -84,8 +107,7 @@ const Navbar = () => {
             </button>
           </div>
 
-
-         
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -96,7 +118,7 @@ const Navbar = () => {
           </div>
         </div>
 
-
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.div
             className="md:hidden mt-4 space-y-4 py-2"
@@ -119,8 +141,8 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => {
-                setIsMenuOpen(false)
                 handleLogout()
+                setIsMenuOpen(false)
               }}
               className="block w-full text-left py-2 px-4 text-neutral-700 hover:bg-neutral-100 rounded-md"
             >

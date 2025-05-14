@@ -86,6 +86,15 @@ function App() {
               }
             />
 
+             {/* <Route
+          path="/student/:usn"
+          element={
+            <StudentRoute>
+              <StudentHome />
+            </StudentRoute>
+          }
+          /> */}
+
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

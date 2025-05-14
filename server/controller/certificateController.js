@@ -36,18 +36,21 @@ const getStudentCertificate = (req,res)=>{
 
 }
 
-const getStudentCertificateByTeacher = (req,res)=>{
-    console.log(req.parans.USN);
-    certificateModel.getStudentCertificate(req.params.USN, (result, err)=>{
-        if(err){
-            return res.status(500).send({message : "internal server error"});
-        }
-        if(result.length == 0){
-            return res.status(200).send({message : "no certificates"});
-        }
-        return res.status(200).send(result);
-    })
+const getStudentCertificateByTeacher = (req, res) => {
+  console.log(req.params.USN);
 
-}
+  certificateModel.getStudentCertificate(req.params.USN, (err, result) => {
+    if (err) {
+      return res.status(500).send({ message: "internal server error" });
+    }
+    if (result.length === 0) {
+      return res.status(200).send({ message: "no certificates" });
+    }
+    return res.status(200).send(result);
+  });
+};
+
+
+
 
 module.exports = {uploadCertificate, getStudentCertificate, getStudentCertificateByTeacher};
