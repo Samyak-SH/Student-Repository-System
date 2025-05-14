@@ -86,14 +86,14 @@ function App() {
               }
             />
 
-             {/* <Route
-          path="/student/:usn"
-          element={
-            <StudentRoute>
-              <StudentHome />
-            </StudentRoute>
-          }
-          /> */}
+<Route
+  path="/student/home/:usn"
+  element={
+    <ProtectedRoute>
+      <StudentHome />
+    </ProtectedRoute>
+  }
+/>
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

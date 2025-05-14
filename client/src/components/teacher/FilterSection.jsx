@@ -12,34 +12,34 @@ const FilterSection = ({ onFilterChange }) => {
   // Fetch categories and departments data  using api from backend
   useEffect(() => {
     const fetchFiltersData = async () => {
-      // try {
-      //   const categoriesResponse = await fetch('/api/categories')       // Replace it with  backend API
-      //   const departmentsResponse = await fetch('/api/departments')           // Replace it with  backend API
+      try {
+        const categoriesResponse = await fetch('/api/categories')       // Replace it with  backend API
+        const departmentsResponse = await fetch('/api/departments')           // Replace it with  backend API
         
-      //   if (categoriesResponse.ok && departmentsResponse.ok) {
-      //     const categoriesData = await categoriesResponse.json()
-      //     const departmentsData = await departmentsResponse.json()
+        if (categoriesResponse.ok && departmentsResponse.ok) {
+          const categoriesData = await categoriesResponse.json()
+          const departmentsData = await departmentsResponse.json()
           
 
-      //     setCategories(categoriesData)               // Setting  categories from  API response
-      //     setDepartments(departmentsData)       // Set departments from API response
-      //   } else {
+          setCategories(categoriesData)               // Setting  categories from  API response
+          setDepartments(departmentsData)       // Set departments from API response
+        } else {
 
 
 
-      //     // if api fail , use mock data
-      //     setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
-      //     setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
-      //   }
-      // } catch (error) {
-      //   console.error('Error fetching filter data:', error)
+          // if api fail , use mock data
+          setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
+          setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
+        }
+      } catch (error) {
+        console.error('Error fetching filter data:', error)
         
 
-      //   //  If fetching of api  fails use mockdata
-      //      setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
+        //  If fetching of api  fails use mockdata
+           setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
    
-      //     setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
-      // }
+          setDepartments(['Computer Science', 'Electronics & Communication ', 'Mechanical Engineering', 'Information Technology', 'Aeronautics'])
+      }
     }
 
     fetchFiltersData()

@@ -42,29 +42,28 @@ const StudentCredentialForm = ({ onClose, onSuccess }) => {
 
     setLoading(true)
 
+try {
+  const token = localStorage.getItem("jwt_token_teacher");
 
-    try {
-      const token = localStorage.getItem("jwt_token_teacher");
-
-      const response = await axios.post(`${SERVER_URL}/teacher/createStudent`,formData,{
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      //close createStudentAccount form here
-    } catch (err) {
-      console.error(err);
-      if(err.response.status == 500){
-        alert("credentials already exists");
-      }
-      if(err.response.status==400 || err.response.status == 401){
-      navigate('/teacher/login');
-      };
-
-    } finally {
-      setLoading(false)
+  const response = await axios.post(`${SERVER_URL}/teacher/createStudent`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
+  });
+
+  onSuccess(); 
+} catch (err) {
+  console.error(err);
+  if (err.response.status === 500) {
+    alert("credentials already exists");
+  }
+  if (err.response.status === 400 || err.response.status === 401) {
+    navigate('/teacher/login');
+  }
+} finally {
+  setLoading(false);
+}
+
   }
 
   const modalVariants = {
