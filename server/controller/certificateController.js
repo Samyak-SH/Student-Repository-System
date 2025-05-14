@@ -37,15 +37,16 @@ const getStudentCertificate = (req,res)=>{
 }
 
 const getStudentCertificateByTeacher = (req, res) => {
-  console.log(req.param);
+  console.log(req.query.USN);
 
-  certificateModel.getStudentCertificate(req.params.USN, (err, result) => {
+  certificateModel.getStudentCertificate(req.query.USN, (err, result) => {
     if (err) {
       return res.status(500).send({ message: "internal server error" });
     }
     if (result.length === 0) {
       return res.status(200).send({ message: "no certificates" });
     }
+    console.log("ajksdhfukhaskudfhi\n\n\n\n", result);
     return res.status(200).send(result);
   });
 };
