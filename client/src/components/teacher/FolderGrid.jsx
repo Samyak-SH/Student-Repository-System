@@ -45,7 +45,7 @@ const FolderGrid = ({ students, isLoading, searchQuery }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer"
-          onClick={() => navigate(`/student/home/${student.USN}`)}
+          onClick={() => navigate(`/teacher?USN=${student.USN}`)}
         >
           <div className="p-6">
             <div className="flex items-start">

@@ -37,7 +37,7 @@ const getStudentCertificate = (req,res)=>{
 }
 
 const getStudentCertificateByTeacher = (req, res) => {
-  console.log(req.params.USN);
+  console.log(req.param);
 
   certificateModel.getStudentCertificate(req.params.USN, (err, result) => {
     if (err) {

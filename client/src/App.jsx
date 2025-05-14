@@ -12,6 +12,7 @@ import StudentHome from './pages/StudentHome'
 import StudentFolderPage from './pages/StudentFolderPage' 
 import TeacherProfile from './pages/TeacherProfile'
 import StudentProfile from './pages/StudentProfile'
+import TeacherStudentHome from './pages/teacherStudentHome'
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
@@ -96,10 +97,10 @@ function App() {
 /> */}
 
 <Route
-  path="/student/home/:usn/*"
+  path="/teacher*"
   element={
     <ProtectedRoute>
-      <StudentHome />
+      <TeacherStudentHome />
     </ProtectedRoute>
   }
 />
