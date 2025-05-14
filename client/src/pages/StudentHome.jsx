@@ -167,9 +167,7 @@ const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
   </motion.div>
 )
 
-// ... all imports stay unchanged
 
-// (CreateFolderModal, UploadCertificateModal, FolderCard stay unchanged)
 
 const StudentHome = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)

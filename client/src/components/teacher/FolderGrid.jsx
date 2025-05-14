@@ -1,4 +1,4 @@
-// src/components/teacher/FolderGrid.jsx
+
 import { useNavigate } from 'react-router-dom';
 import { FiFolder, FiUser, FiBriefcase, FiMail } from 'react-icons/fi';
 import { motion } from 'framer-motion';

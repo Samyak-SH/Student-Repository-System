@@ -1,4 +1,4 @@
-// src/pages/TeacherHome.jsx
+
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FiPlus, FiHelpCircle, FiDownload } from 'react-icons/fi'
