@@ -167,6 +167,10 @@ const FolderCard = ({ folder, onEdit, onDelete, onEnter }) => (
   </motion.div>
 )
 
+// ... all imports stay unchanged
+
+// (CreateFolderModal, UploadCertificateModal, FolderCard stay unchanged)
+
 const StudentHome = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -178,28 +182,27 @@ const StudentHome = () => {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
- const fetchCertificates = async () => {
-  try {
-    const token = localStorage.getItem("jwt_token_student");
-    const response = await axios.get(`${SERVER_URL}/student/certificates`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    
-    console.log("API Response:", response.data); // Debug log
-    
-    if (response.data.certificates) {
-      setCertificates(response.data.certificates);
-    } else if (Array.isArray(response.data)) {
-      setCertificates(response.data);
-    } else {
-      console.error("Unexpected response format:", response.data);
+  const fetchCertificates = async () => {
+    try {
+      const token = localStorage.getItem("jwt_token_student");
+      const response = await axios.get(`${SERVER_URL}/student/certificates`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.certificates) {
+        setCertificates(response.data.certificates);
+      } else if (Array.isArray(response.data)) {
+        setCertificates(response.data);
+      } else {
+        console.error("Unexpected response format:", response.data);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Fetch error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+
   useEffect(() => {
     fetchCertificates();
   }, []);
@@ -242,7 +245,6 @@ const StudentHome = () => {
         })
         alert('Certificate uploaded successfully!')
         setShowUploadModal(false)
-       
         fetchCertificates();
       } catch (error) {
         console.error('Upload failed:', error)
@@ -285,7 +287,6 @@ const StudentHome = () => {
     setSearchQuery(query);
   };
 
-  //filtering
   const filteredCertificates = certificates.filter(cert => {
     const matchesCategory = selectedCategory ? cert.Tag === selectedCategory : true;
     const matchesSearch = searchQuery
@@ -313,13 +314,11 @@ const StudentHome = () => {
             </div>
           </div>
 
-          {/* Search Bar */}
           <div className="mb-6">
             <SearchBar onSearch={handleSearch} />
           </div>
 
           <div className="flex gap-6">
-            {/* Left Sidebar with Category Filter */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -342,10 +341,16 @@ const StudentHome = () => {
                     </button>
                   ))}
                 </div>
+
+                {/* ✅ CERTIFICATE COUNT DISPLAYED HERE */}
+                {selectedCategory && (
+                  <p className="mt-4 text-sm text-neutral-500">
+                    {filteredCertificates.length} certificate{filteredCertificates.length !== 1 && 's'} found
+                  </p>
+                )}
               </div>
             </motion.div>
 
-            {/* Main Content Area */}
             <div className="flex-1">
               {loading ? (
                 <div className="flex justify-center items-center h-64">
@@ -374,7 +379,7 @@ const StudentHome = () => {
                             <p className="text-sm text-neutral-500 mb-2">Category: {certificate.Tag}</p>
                             <p className="text-sm text-neutral-500">Uploaded on {new Date(certificate.Date).toLocaleDateString()}</p>
                           </div>
-                          
+
                           <div className="flex space-x-2 ml-4">
                             <button 
                               onClick={() => {

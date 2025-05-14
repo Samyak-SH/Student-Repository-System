@@ -99,6 +99,13 @@ const TeacherHome = () => {
               <div className="space-y-6">
                 <FilterSection onFilterChange={handleFilterChange} />
 
+                {/* ✅ Department count shown here */}
+                {filters.department && (
+                  <p className="text-sm text-neutral-500">
+                    {filteredStudents.length} student{filteredStudents.length !== 1 && 's'} found
+                  </p>
+                )}
+
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

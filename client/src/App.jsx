@@ -86,8 +86,17 @@ function App() {
               }
             />
 
-<Route
+{/* <Route
   path="/student/home/:usn"
+  element={
+    <ProtectedRoute>
+      <StudentHome />
+    </ProtectedRoute>
+  }
+/> */}
+
+<Route
+  path="/student/home/:usn/*"
   element={
     <ProtectedRoute>
       <StudentHome />
