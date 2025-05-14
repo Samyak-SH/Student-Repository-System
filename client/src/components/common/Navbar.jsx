@@ -53,12 +53,13 @@ const Navbar = () => {
   }
 
   const getHomeLink = () => {
-    if (userType === 'teacher') {
-      return '/teacher/home'
-    } else if (userType === 'student') {
-      return '/student/home'
-    }
     return '/'
+    // if (userType === 'teacher') {
+    //   return '/teacher/home'
+    // } else if (userType === 'student') {
+    //   return '/student/home'
+    // }
+    // return '/'
   }
 
   const navbarVariants = {

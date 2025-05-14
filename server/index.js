@@ -26,8 +26,8 @@ const app = express();
 app.use(cors({
   exposedHeaders: ['x-auth-token'], 
 }));
-app.use(express.json({limit : '10mb'}));
-app.use(express.urlencoded({extended : true, limit : '10mb'}));
+app.use(express.json({limit : '50mb'}));
+app.use(express.urlencoded({extended : true, limit : '50mb'}));
 
 //routings
 app.use("/student", studentRouter);
