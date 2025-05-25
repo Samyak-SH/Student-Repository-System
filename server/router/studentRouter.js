@@ -12,7 +12,7 @@ const {verifyToken} = require("../middleware/verifyToken");
 studentRouter.use(verifyToken);
 
 studentRouter.get("/getStudent", getStudent);
-studentRouter.get("/certificates", verifyToken, getStudentCertificate);
+studentRouter.get("/certificates", getStudentCertificate);
 studentRouter.post("/updateStudent", updateStudent);
 studentRouter.post("/uploadCertificate", uploadCertificate);
 
