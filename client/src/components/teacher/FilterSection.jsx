@@ -135,7 +135,7 @@ const FilterSection = ({ onFilterChange }) => {
           </motion.div>
         )}
 
-        {/* Semester Filter */}
+        {/* Semester Filtering */}
         <motion.div variants={itemVariants}>
           <h3 className="text-lg font-semibold mb-3">Filter by Semester</h3>
           <div className="flex flex-wrap gap-2">
