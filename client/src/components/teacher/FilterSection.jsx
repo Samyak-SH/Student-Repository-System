@@ -12,27 +12,7 @@ const FilterSection = ({ onFilterChange }) => {
 
   // Fetch categories and departments data  using api from backend
   useEffect(() => {
-    const fetchFiltersData = async () => {
-      try {
-        const categoriesResponse = await fetch('/api/categories')      
-        const departmentsResponse = await fetch('/api/departments')   
-        
-        if (categoriesResponse.ok && departmentsResponse.ok) {
-          const categoriesData = await categoriesResponse.json()
-          const departmentsData = await departmentsResponse.json()
-          
-          setCategories(categoriesData)              
-          setDepartments(departmentsData)             
-        } else {
-          // fallback mock data if API fails
-          setDepartments(['Computer Science', 'Data Science', 'Information Technology','Chemical Engineering','BioTech Engineering','Mechanical Engineering', 'ECE', 'Aeronautics'])
-        }
-      } catch (error) {
-        console.error('Error fetching filter data:', error)
-        setDepartments(['Computer Science', 'Electronics & Communication','Chemical Engineering','BioTech Engineering','Mechanical Engineering', 'Information Technology', 'Aeronautics'])
-      }
-    }
-    fetchFiltersData()
+    setDepartments(['Computer Science', 'Information Technology', 'Electronics & Communication', 'Electrical Engineering', 'Mechanical Engineering', 'Civil Engineering', 'Biotechnology', 'Chemical Engineering'])
   }, [])
 
   
