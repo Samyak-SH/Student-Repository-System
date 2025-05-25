@@ -28,7 +28,7 @@ const FilterSection = ({ onFilterChange }) => {
 
 
           // if api fail , use mock data
-          setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
+          // setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
           setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
         }
       } catch (error) {
@@ -36,7 +36,7 @@ const FilterSection = ({ onFilterChange }) => {
         
 
         //  If fetching of api  fails use mockdata
-           setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
+          //  setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
    
           setDepartments(['Computer Science', 'Electronics & Communication ', 'Mechanical Engineering', 'Information Technology', 'Aeronautics'])
       }

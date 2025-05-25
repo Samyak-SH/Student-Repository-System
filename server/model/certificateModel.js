@@ -26,12 +26,14 @@ const uploadCertificate = async (certificate, cb)=>{
 
 const getStudentCertificate = async (USN, cb)=>{
     try{
+        console.log(`fetching ${USN} certificate by teaccher`);
         const result = await certificateModel.find({USN : USN});
-        cb(result, null);
+        // console.log(result);
+        cb(null, result);
     }
     catch(err){
         console.error(err);
-        cb(null, err.message);
+        cb(err.message, null);
     }
 }
 
