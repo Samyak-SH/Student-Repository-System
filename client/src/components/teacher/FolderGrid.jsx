@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { FiFolder, FiUser, FiBriefcase, FiMail } from 'react-icons/fi';
 import { motion } from 'framer-motion';
@@ -6,7 +5,7 @@ import { motion } from 'framer-motion';
 const FolderGrid = ({ students, isLoading, searchQuery }) => {
   const navigate = useNavigate();
 
-  // Filter students based on search query
+ 
   const filteredStudents = students.filter(student => 
     searchQuery 
       ? student.USN.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -68,6 +67,10 @@ const FolderGrid = ({ students, isLoading, searchQuery }) => {
                   <div className="flex items-center">
                     <FiMail className="w-4 h-4 mr-2 text-blue-500" />
                     <span>{student.email}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <FiBriefcase className="w-4 h-4 mr-2 text-blue-500" />
+                    <span>Semester: {student.semester}</span>
                   </div>
                 </div>
               </div>

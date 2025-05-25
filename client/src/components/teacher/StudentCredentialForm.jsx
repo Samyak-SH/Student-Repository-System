@@ -15,6 +15,7 @@ const StudentCredentialForm = ({ onClose, onSuccess }) => {
     email: '',
     password: '',
     department: '',
+    semester: '', 
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -30,7 +31,7 @@ const StudentCredentialForm = ({ onClose, onSuccess }) => {
 
     // Basic validation
     if (!formData.firstName || !formData.lastName || !formData.usn || 
-        !formData.email || !formData.password || !formData.department) {
+        !formData.email || !formData.password || !formData.department || !formData.semester) {
       setError('All fields are required')
       return
     }
@@ -42,28 +43,27 @@ const StudentCredentialForm = ({ onClose, onSuccess }) => {
 
     setLoading(true)
 
-try {
-  const token = localStorage.getItem("jwt_token_teacher");
+    try {
+      const token = localStorage.getItem("jwt_token_teacher");
 
-  const response = await axios.post(`${SERVER_URL}/teacher/createStudent`, formData, {
-    headers: {
-      Authorization: `Bearer ${token}`
+      const response = await axios.post(`${SERVER_URL}/teacher/createStudent`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      onSuccess(); 
+    } catch (err) {
+      console.error(err);
+      if (err.response.status === 500) {
+        alert("credentials already exists");
+      }
+      if (err.response.status === 400 || err.response.status === 401) {
+        navigate('/teacher/login');
+      }
+    } finally {
+      setLoading(false);
     }
-  });
-
-  onSuccess(); 
-} catch (err) {
-  console.error(err);
-  if (err.response.status === 500) {
-    alert("credentials already exists");
-  }
-  if (err.response.status === 400 || err.response.status === 401) {
-    navigate('/teacher/login');
-  }
-} finally {
-  setLoading(false);
-}
-
   }
 
   const modalVariants = {
@@ -164,7 +164,7 @@ try {
             </div>
           </div>
 
-    {/* fetching department from Mockdata for now */}
+          {/* Department Field */}
           <div className="mb-4">
             <label htmlFor="department" className="block text-sm font-medium text-neutral-700 mb-1">
               Department
@@ -179,6 +179,27 @@ try {
               <option value="">Select Department</option>
               {departments.map(dept => (
                 <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+          </div>
+
+          
+          <div className="mb-4">
+            <label htmlFor="semester" className="block text-sm font-medium text-neutral-700 mb-1">
+              Semester
+            </label>
+            <select
+              id="semester"
+              name="semester"
+              value={formData.semester}
+              onChange={handleChange}
+              className="input-field"
+            >
+              <option value="">Select Semester</option>
+              {[...Array(8)].map((_, index) => (
+                <option key={index + 1} value={index + 1}>
+                  Semester {index + 1}
+                </option>
               ))}
             </select>
           </div>

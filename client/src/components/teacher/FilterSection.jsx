@@ -1,71 +1,70 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
+const semesters = ['1', '2', '3', '4', '5', '6', '7', '8']  
+
 const FilterSection = ({ onFilterChange }) => {
-  const [categories, setCategories] = useState([])          // Categories state
-  const [departments, setDepartments] = useState([])       // Departments state
+  const [categories, setCategories] = useState([])         
+  const [departments, setDepartments] = useState([])       
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedDepartment, setSelectedDepartment] = useState('')
-
-
+  const [selectedSemester, setSelectedSemester] = useState('')
 
   // Fetch categories and departments data  using api from backend
   useEffect(() => {
     const fetchFiltersData = async () => {
       try {
-        const categoriesResponse = await fetch('/api/categories')       // Replace it with  backend API
-        const departmentsResponse = await fetch('/api/departments')           // Replace it with  backend API
+        const categoriesResponse = await fetch('/api/categories')      
+        const departmentsResponse = await fetch('/api/departments')   
         
         if (categoriesResponse.ok && departmentsResponse.ok) {
           const categoriesData = await categoriesResponse.json()
           const departmentsData = await departmentsResponse.json()
           
-
-          setCategories(categoriesData)               // Setting  categories from  API response
-          setDepartments(departmentsData)       // Set departments from API response
+          setCategories(categoriesData)              
+          setDepartments(departmentsData)             
         } else {
-
-
-
-          // if api fail , use mock data
-          // setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
-          setDepartments(['Computer Science', 'Data Science ', 'Mechanical Engineering', 'ECE', 'Aeronautics'])
+          // fallback mock data if API fails
+          setDepartments(['Computer Science', 'Data Science', 'Information Technology','Chemical Engineering','BioTech Engineering','Mechanical Engineering', 'ECE', 'Aeronautics'])
         }
       } catch (error) {
         console.error('Error fetching filter data:', error)
-        
-
-        //  If fetching of api  fails use mockdata
-          //  setCategories(['Sports', 'Hackathons', 'TreasureHunt', 'Cpa', 'Design'])
-   
-          setDepartments(['Computer Science', 'Electronics & Communication ', 'Mechanical Engineering', 'Information Technology', 'Aeronautics'])
+        setDepartments(['Computer Science', 'Electronics & Communication','Chemical Engineering','BioTech Engineering','Mechanical Engineering', 'Information Technology', 'Aeronautics'])
       }
     }
-
     fetchFiltersData()
   }, [])
 
-
-
-  // Handle  changes based on category
+  
   const handleCategoryChange = (category) => {
     const newCategory = category === selectedCategory ? '' : category
     setSelectedCategory(newCategory)
     onFilterChange({
       category: newCategory,
-      department: selectedDepartment
+      department: selectedDepartment,
+      semester: selectedSemester,
     })
   }
 
-
-
-  // handle chnages based on department
+  // Handle department change
   const handleDepartmentChange = (department) => {
     const newDepartment = department === selectedDepartment ? '' : department
     setSelectedDepartment(newDepartment)
     onFilterChange({
       category: selectedCategory,
-      department: newDepartment
+      department: newDepartment,
+      semester: selectedSemester,
+    })
+  }
+
+  // Handle semester change
+  const handleSemesterChange = (semester) => {
+    const newSemester = semester === selectedSemester ? '' : semester
+    setSelectedSemester(newSemester)
+    onFilterChange({
+      category: selectedCategory,
+      department: selectedDepartment,
+      semester: newSemester,
     })
   }
 
@@ -85,7 +84,6 @@ const FilterSection = ({ onFilterChange }) => {
     visible: { opacity: 1, x: 0 }
   }
 
-
   return (
     <div className="bg-white rounded-lg shadow-card p-5">
       <motion.div
@@ -93,6 +91,7 @@ const FilterSection = ({ onFilterChange }) => {
         initial="hidden"
         animate="visible"
       >
+        {/* Category Filter */}
         {categories.length > 0 && (
           <motion.div variants={itemVariants}>
             <h3 className="text-lg font-semibold mb-3">Filter by Category</h3>
@@ -114,10 +113,11 @@ const FilterSection = ({ onFilterChange }) => {
           </motion.div>
         )}
 
+        {/* Department Filter */}
         {departments.length > 0 && (
           <motion.div variants={itemVariants}>
             <h3 className="text-lg font-semibold mb-3">Filter by Department</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-6">
               {departments.map((department) => (
                 <button
                   key={department}
@@ -134,6 +134,26 @@ const FilterSection = ({ onFilterChange }) => {
             </div>
           </motion.div>
         )}
+
+        {/* Semester Filter */}
+        <motion.div variants={itemVariants}>
+          <h3 className="text-lg font-semibold mb-3">Filter by Semester</h3>
+          <div className="flex flex-wrap gap-2">
+            {semesters.map((semester) => (
+              <button
+                key={semester}
+                onClick={() => handleSemesterChange(semester)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  selectedSemester === semester
+                    ? 'bg-green-100 text-green-700 border border-green-300'
+                    : 'bg-neutral-100 text-neutral-600 border border-neutral-200 hover:bg-neutral-200'
+                }`}
+              >
+                {semester}
+              </button>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   )
