@@ -184,7 +184,7 @@ const TeacherStudentHome = () => {
 
   const fetchCertificates = async () => {
     try {
-      const token = localStorage.getItem("jwt_token_student");
+      const token = localStorage.getItem("jwt_token_teacher");
       const queryParams = new URLSearchParams(window.location.search);
       const USN = queryParams.get('USN');
       console.log({ USN });
@@ -192,7 +192,7 @@ const TeacherStudentHome = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      
+
 
       if (response.data.certificates) {
         setCertificates(response.data.certificates);
@@ -308,15 +308,10 @@ const TeacherStudentHome = () => {
         <div className="section-container">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-neutral-800 mb-2">Your Certificates</h1>
+              <h1 className="text-3xl font-bold text-neutral-800 mb-2">Student's Certificates</h1>
               <p className="text-neutral-600"><span className="font-mono">{currentPath.join('/')}</span></p>
             </div>
 
-            <div className="flex gap-3">
-              <button onClick={() => setShowUploadModal(true)} className="btn-outline">
-                <FiUpload className="mr-2" /> Upload Certificate
-              </button>
-            </div>
           </div>
 
           <div className="mb-6">

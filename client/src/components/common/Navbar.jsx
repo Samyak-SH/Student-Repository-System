@@ -92,13 +92,13 @@ const Navbar = () => {
 
           {/* Profile Menu */}
           <div className="hidden md:flex items-center space-x-6">
-            <button
+            {/* <button
               onClick={handleProfileClick}
               className="flex items-center space-x-1 text-neutral-700 hover:text-primary-600 transition-colors"
             >
               <FiUser className="w-5 h-5" />
               <span>Profile</span>
-            </button>
+            </button> */}
             <button
               onClick={handleLogout}
               className="flex items-center space-x-1 text-neutral-700 hover:text-primary-600 transition-colors"
