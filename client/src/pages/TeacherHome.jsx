@@ -99,7 +99,6 @@ const TeacherHome = () => {
               <div className="space-y-6">
                 <FilterSection onFilterChange={handleFilterChange} />
 
-                {/* ✅ Department count shown here */}
                 {filters.department && (
                   <p className="text-sm text-neutral-500">
                     {filteredStudents.length} student{filteredStudents.length !== 1 && 's'} found
@@ -127,7 +126,7 @@ const TeacherHome = () => {
                     className="btn-secondary w-full justify-center py-3 mb-4 flex items-center"
                   >
                     <FiDownload className="mr-2" />
-                    <span>Download Student Credential CSV</span>
+                    <span>Add Students Credential CSV</span>
                   </button>
 
                   <div className="mt-4 p-4 bg-blue-50 rounded-md">
