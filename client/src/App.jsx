@@ -12,7 +12,7 @@ import StudentHome from './pages/StudentHome'
 import StudentFolderPage from './pages/StudentFolderPage' 
 import TeacherProfile from './pages/TeacherProfile'
 import StudentProfile from './pages/StudentProfile'
-import TeacherStudentHome from './pages/teacherStudentHome'
+import TeacherStudentHome from './pages/TeacherStudentHome'
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
