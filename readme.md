@@ -57,7 +57,7 @@ Before you begin, ensure you have the following installed:
    ```
    PORT= 
    MONGODBURL= 
-   SECRET KEY = 
+   SECRET_KEY = 
    ```
    * `PORT`: The port number you want your server to run on (e.g., 5000).
    * `MONGODBURL`: mongodb+srv://`<username>`:`<password>`@test.tv0wrvf.mongodb.net/SCR?retryWrites=true&w=majority&appName=TEST
