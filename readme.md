@@ -11,7 +11,14 @@ Before you begin, ensure you have the following installed:
 
 ## Setup Instructions
 
-### 1. Set up the Client
+### 1. Clone the repository:
+   ```bash
+   git clone https://github.com/Samyak-SH/Student-Repository-System.git
+
+   cd Student-Repository-System
+   ```
+
+### 2. Set up the Client
 
 1. Navigate to the client directory:
    ```bash
@@ -29,7 +36,7 @@ Before you begin, ensure you have the following installed:
    * `VITE_SERVER_URL`: will be something like http://localhost:PORT.
    * Here `PORT` is the same number that u will be entering in the server side .env file
 
-### 2. Set up the Server
+### 3. Set up the Server
 
 1. Move back to the root directory (if you're in the client directory):
    ```bash
@@ -56,7 +63,7 @@ Before you begin, ensure you have the following installed:
    * `MONGODBURL`: mongodb+srv://`<username>`:`<password>`@test.tv0wrvf.mongodb.net/SCR?retryWrites=true&w=majority&appName=TEST
    * `SECRETKEY`: Your JWT verification key.
 
-### 3. Start the Application
+### 4. Start the Application
 
 #### Start the Server
 Inside the `server` directory, run:
