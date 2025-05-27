@@ -126,13 +126,13 @@ const TeacherHome = () => {
                     <span>Create Student Account</span>
                   </button>
 
-                  <button
+                  {/*<button
                     onClick={handleDownloadCSV}
                     className="btn-secondary w-full justify-center py-3 mb-4 flex items-center"
                   >
                     <FiDownload className="mr-2" />
                     <span>Add Students Credential CSV</span>
-                  </button>
+                  </button>*/}
 
                   <div className="mt-4 p-4 bg-blue-50 rounded-md">
                     <div className="flex items-start">
