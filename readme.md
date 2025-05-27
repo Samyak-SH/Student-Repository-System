@@ -100,4 +100,4 @@ project-root/
 
 * Make sure MongoDB is running locally or the `MONGODBURL` is properly set if using a cloud database (e.g., MongoDB Atlas).
 * Ensure that the client and server are running in their respective environments if you plan to run both simultaneously.
-* The client typically runs on port 3000 by default, while the server runs on the port specified in your `.env` file.
+* The client typically runs on port 5173 by default, while the server runs on the port specified in your `.env` file.
