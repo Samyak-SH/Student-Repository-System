@@ -26,7 +26,7 @@ Before you begin, ensure you have the following installed:
    ```bash
    VITE_SERVER_URL=  
    ```
-   * `VITE_SERVER_URL`: will be something like http://localhost:`PORT`.
+   * `VITE_SERVER_URL`: will be something like http://localhost:PORT.
    * Here `PORT` is the same number that u will be entering in the server side .env file
 
 ### 2. Set up the Server
