@@ -14,11 +14,28 @@ services:
     image: student-repo-server
     ports:
       - "8080:8080"
-    env_file:
-      - ./server/.env
+    environment:
+      - PORT=8080
+      - SECRET_KEY=mykey123
+      - MONGODBURL=mongodb://root:root@mongodb:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.2
     networks:
       - student-repo-network
+    
+  mongodb:
+    image : mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    networks:
+      - student-repo-network
+    volumes:
+      - mongo-data:/data/db
 
 networks:
   student-repo-network:
     driver: bridge
+
+volumes:
+  mongo-data:
