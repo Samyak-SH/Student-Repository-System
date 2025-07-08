@@ -80,7 +80,7 @@ npm run dev
 
 ## Option 2: Run with Docker Compose
 
-Once your `.env` files are ready, you can use Docker Compose to build and run the app:
+Once your `.env` files are ready, you can use Docker Compose to build and run the app after cloning the repository as shown in Option 1 step 1:
 
 ### 1. Build and start the containers
 ```bash
