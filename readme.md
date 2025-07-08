@@ -80,7 +80,7 @@ npm run dev
 
 ## Option 2: Run with Docker Compose
 
-Once your `./client/.env` files is ready, you can use Docker Compose to build and run the app:<br>
+Once your `./client/.env` files is ready, you can use Docker Compose to build and run the app after cloning the repository as shown in Option 1 step 1 :<br>
 - server side env configuration can be made in the `docker-compose.yaml` file
 
 ### 1. Build and start the containers
