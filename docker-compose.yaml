@@ -1,0 +1,24 @@
+services:
+  frontend:
+    build : ./client 
+    image: student-repo-client
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./client/.env
+    networks:
+      - student-repo-network
+    
+  backend:
+    build : ./server
+    image: student-repo-server
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./server/.env
+    networks:
+      - student-repo-network
+
+networks:
+  student-repo-network:
+    driver: bridge
